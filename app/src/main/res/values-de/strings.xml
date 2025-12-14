@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SM Tweaks</string>
+    <string name="calendar_table_widget_last_update">Letztes Update: %s</string>
+    <string name="calendar_table_widget_last_update_never">Nie</string>
+    <string name="wron_login_toast">Fehlerhafte Login Daten</string>
+    <string name="widget_updater_fetching_data">Daten werden angefordert</string>
+    <string name="calendar_table_widget_configuration">Stundenplan Einstellungen</string>
+    <string name="calendar_widget_configuration_username">Benutzername:</string>
+    <string name="calendar_widget_configuration_password">Passwort:</string>
+    <string name="calendar_widget_configuration_show_last_week_switch">Letzte Woche anzeigen</string>
+    <string name="calendar_table_widget_update">Update</string>
+    <string name="day_monday">Mo</string>
+    <string name="day_tuesday">Di</string>
+    <string name="day_wednesday">Mi</string>
+    <string name="day_thursday">Do</string>
+    <string name="day_friday">Fr</string>
+</resources>
