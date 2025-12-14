@@ -38,7 +38,9 @@
 
         <activity
             android:name=".widgets.calendar.ConfigurationActivity"
-            android:exported="true">
+            android:exported="true"
+            android:noHistory="true"
+            android:excludeFromRecents="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>

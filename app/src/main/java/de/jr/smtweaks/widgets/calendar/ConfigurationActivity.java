@@ -1,5 +1,6 @@
 package de.jr.smtweaks.widgets.calendar;
 
+import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
@@ -51,5 +52,12 @@ public class ConfigurationActivity extends AppCompatActivity {
             finish();
         });
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        setResult(Activity.RESULT_CANCELED);
+        finish();
     }
 }

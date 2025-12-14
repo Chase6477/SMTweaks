@@ -8,7 +8,7 @@
         android:id="@+id/imageView18"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#767676" />
+        android:background="@color/widget_table_border" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
             android:id="@+id/imageView8"
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:background="#767676" />
+            android:background="@color/widget_table_border" />
 
         <TextView
             android:id="@+id/cell0"
@@ -28,13 +28,14 @@
             android:gravity="center_vertical"
             android:paddingHorizontal="16dp"
             android:text="0"
+            android:textColor="@color/widget_default_text"
             android:visibility="invisible" />
 
         <ImageView
             android:id="@+id/imageView11"
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:background="#767676" />
+            android:background="@color/widget_table_border" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -49,13 +50,15 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingBottom="4dp"
-                android:text="@string/day_monday" />
+                android:text="@string/day_monday"
+                android:textColor="@color/widget_default_text"
+                android:textSize="14sp" />
 
             <ImageView
                 android:id="@+id/imageView13"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="#767676" />
+                android:background="@color/widget_table_border" />
 
             <TextView
                 android:id="@+id/header2"
@@ -64,13 +67,14 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingBottom="4dp"
-                android:text="@string/day_tuesday" />
+                android:text="@string/day_tuesday"
+                android:textColor="@color/widget_default_text" />
 
             <ImageView
                 android:id="@+id/imageView14"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="#767676" />
+                android:background="@color/widget_table_border" />
 
             <TextView
                 android:id="@+id/header3"
@@ -79,13 +83,14 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingBottom="4dp"
-                android:text="@string/day_wednesday" />
+                android:text="@string/day_wednesday"
+                android:textColor="@color/widget_default_text" />
 
             <ImageView
                 android:id="@+id/imageView15"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="#767676" />
+                android:background="@color/widget_table_border" />
 
             <TextView
                 android:id="@+id/header4"
@@ -94,13 +99,14 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingBottom="4dp"
-                android:text="@string/day_thursday" />
+                android:text="@string/day_thursday"
+                android:textColor="@color/widget_default_text" />
 
             <ImageView
                 android:id="@+id/imageView16"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="#767676" />
+                android:background="@color/widget_table_border" />
 
             <TextView
                 android:id="@+id/header5"
@@ -109,13 +115,14 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingBottom="4dp"
-                android:text="@string/day_friday" />
+                android:text="@string/day_friday"
+                android:textColor="@color/widget_default_text" />
 
             <ImageView
                 android:id="@+id/imageView17"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="#767676" />
+                android:background="@color/widget_table_border" />
         </LinearLayout>
 
     </LinearLayout>
@@ -124,6 +131,6 @@
         android:id="@+id/imageView6"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#767676" />
+        android:background="@color/widget_table_border" />
 
 </LinearLayout>

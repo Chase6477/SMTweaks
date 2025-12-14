@@ -6,9 +6,13 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.Uri;
+import android.os.Bundle;
+import android.util.TypedValue;
 import android.widget.RemoteViews;
+
+import androidx.core.content.ContextCompat;
 
 import java.io.File;
 import java.util.Calendar;
@@ -21,6 +25,38 @@ import de.jr.smtweaks.widgets.calendar.remoteview.RemoteViewService;
 
 public class WidgetProvider extends AppWidgetProvider {
     private static final int[] headerIDs = {R.id.header1, R.id.header2, R.id.header3, R.id.header4, R.id.header5};
+
+    public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.calendar_table_widget);
+        updateRemoteViewFormats(views, context);
+        Intent serviceIntent = new Intent(context, RemoteViewService.class);
+        serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        serviceIntent.setData(Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME)));
+        views.setRemoteAdapter(R.id.listView, serviceIntent);
+        appWidgetManager.updateAppWidget(appWidgetId, views);
+    }
+
+    private static void updateRemoteViewFormats(RemoteViews views, Context context) {
+        int dayOfWeek = (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 5) % 7;
+        if (dayOfWeek <= 4) {
+            views.setTextColor(headerIDs[dayOfWeek], ContextCompat.getColor(context, R.color.widget_default_text));
+            views.setInt(
+                    headerIDs[dayOfWeek],
+                    "setPaintFlags",
+                    Paint.FAKE_BOLD_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG
+            );
+            views.setTextViewTextSize(headerIDs[dayOfWeek], TypedValue.COMPLEX_UNIT_SP, 16);
+        }
+        File file = new File(context.getFilesDir(), CryptoUtil.FileNames.PLAIN_CALENDAR_TABLE_DATA_FILE_NAME);
+        if (!file.exists())
+            views.setTextViewText(R.id.textView, context.getString(R.string.calendar_table_widget_last_update, context.getString(R.string.calendar_table_widget_last_update_never)));
+        else {
+            Date fileDate = new Date(file.lastModified());
+            String date = android.text.format.DateFormat.getDateFormat(context).format(fileDate);
+            String time = android.text.format.DateFormat.getTimeFormat(context).format(fileDate);
+            views.setTextViewText(R.id.textView, context.getString(R.string.calendar_table_widget_last_update, date + " " + time));
+        }
+    }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -46,7 +82,6 @@ public class WidgetProvider extends AppWidgetProvider {
         }
     }
 
-
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
@@ -60,29 +95,9 @@ public class WidgetProvider extends AppWidgetProvider {
         }
     }
 
-    public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.calendar_table_widget);
-        updateRemoteViewFormats(views, context);
-        Intent serviceIntent = new Intent(context, RemoteViewService.class);
-        serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        serviceIntent.setData(Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME)));
-        views.setRemoteAdapter(R.id.listView, serviceIntent);
-        appWidgetManager.updateAppWidget(appWidgetId, views);
-    }
-
-
-    private static void updateRemoteViewFormats(RemoteViews views, Context context) {
-        int dayOfWeek = (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 5) % 7;
-        if (dayOfWeek <= 4)
-            views.setTextColor(headerIDs[dayOfWeek], Color.WHITE);
-        File file = new File(context.getFilesDir(), CryptoUtil.FileNames.PLAIN_CALENDAR_TABLE_DATA_FILE_NAME);
-        if (!file.exists())
-            views.setTextViewText(R.id.textView, context.getString(R.string.calendar_table_widget_last_update, context.getString(R.string.calendar_table_widget_last_update_never)));
-        else {
-            Date fileDate = new Date(file.lastModified());
-            String date = android.text.format.DateFormat.getDateFormat(context).format(fileDate);
-            String time = android.text.format.DateFormat.getTimeFormat(context).format(fileDate);
-            views.setTextViewText(R.id.textView, context.getString(R.string.calendar_table_widget_last_update, date + " " + time));
-        }
+    @Override
+    public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
+        super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
+        updateAppWidget(context, appWidgetManager, appWidgetId);
     }
 }

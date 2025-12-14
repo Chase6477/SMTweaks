@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#040404"
+    android:background="@color/widget_background"
     android:orientation="vertical"
     android:paddingHorizontal="16dp"
     android:paddingBottom="16dp">
@@ -23,18 +23,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/calendar_table_widget_last_update" />
+                android:text="@string/calendar_table_widget_last_update"
+                android:textColor="@color/widget_default_text" />
 
             <Button
                 android:id="@+id/button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:backgroundTint="#121212"
+                android:backgroundTint="@color/widget_primary"
                 android:insetTop="8dp"
                 android:insetBottom="8dp"
                 android:text="@string/calendar_table_widget_update"
-                android:textColor="@color/widget_default_text"
+                android:textColor="@color/widget_primary_inverse"
                 android:textSize="14sp"
                 app:cornerRadius="100dp"
                 app:iconGravity="textStart" />

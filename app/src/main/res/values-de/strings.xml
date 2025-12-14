@@ -15,4 +15,5 @@
     <string name="day_wednesday">Mi</string>
     <string name="day_thursday">Do</string>
     <string name="day_friday">Fr</string>
+    <string name="calendar_widget_configuration_apply">Anwenden</string>
 </resources>

@@ -13,14 +13,15 @@
             android:id="@+id/imageView10"
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:background="#767676" />
+            android:background="@color/widget_table_border" />
 
         <TextView
             android:id="@+id/cell0"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:paddingHorizontal="16dp" />
+            android:paddingHorizontal="16dp"
+            android:textColor="@color/widget_default_text" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,7 +32,7 @@
                 android:id="@+id/imageView"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="#767676" />
+                android:background="@color/widget_table_border" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -50,14 +51,16 @@
                         android:id="@+id/t5l1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:textColor="@color/widget_default_text" />
 
                     <TextView
                         android:id="@+id/t5r1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
 
-                        android:textAlignment="center" />
+                        android:textAlignment="center"
+                        android:textColor="@color/widget_default_text" />
                 </LinearLayout>
 
                 <TextView
@@ -65,7 +68,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:textColor="@color/widget_default_text" />
 
             </LinearLayout>
 
@@ -73,7 +77,7 @@
                 android:id="@+id/imageView2"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="#767676" />
+                android:background="@color/widget_table_border" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -92,14 +96,16 @@
                         android:id="@+id/t5l2"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:textColor="@color/widget_default_text" />
 
                     <TextView
                         android:id="@+id/t5r2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
 
-                        android:textAlignment="center" />
+                        android:textAlignment="center"
+                        android:textColor="@color/widget_default_text" />
                 </LinearLayout>
 
                 <TextView
@@ -107,7 +113,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:textColor="@color/widget_default_text" />
 
             </LinearLayout>
 
@@ -115,7 +122,7 @@
                 android:id="@+id/imageView3"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="#767676" />
+                android:background="@color/widget_table_border" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -134,14 +141,16 @@
                         android:id="@+id/t5l3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:textColor="@color/widget_default_text" />
 
                     <TextView
                         android:id="@+id/t5r3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
 
-                        android:textAlignment="center" />
+                        android:textAlignment="center"
+                        android:textColor="@color/widget_default_text" />
                 </LinearLayout>
 
                 <TextView
@@ -149,7 +158,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:textColor="@color/widget_default_text" />
 
             </LinearLayout>
 
@@ -157,7 +167,7 @@
                 android:id="@+id/imageView4"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="#767676" />
+                android:background="@color/widget_table_border" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -176,14 +186,16 @@
                         android:id="@+id/t5l4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:textColor="@color/widget_default_text" />
 
                     <TextView
                         android:id="@+id/t5r4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
 
-                        android:textAlignment="center" />
+                        android:textAlignment="center"
+                        android:textColor="@color/widget_default_text" />
                 </LinearLayout>
 
                 <TextView
@@ -191,7 +203,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:textColor="@color/widget_default_text" />
 
             </LinearLayout>
 
@@ -199,7 +212,7 @@
                 android:id="@+id/imageView5"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="#767676" />
+                android:background="@color/widget_table_border" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -218,14 +231,16 @@
                         android:id="@+id/t5l5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:textColor="@color/widget_default_text" />
 
                     <TextView
                         android:id="@+id/t5r5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
 
-                        android:textAlignment="center" />
+                        android:textAlignment="center"
+                        android:textColor="@color/widget_default_text" />
                 </LinearLayout>
 
                 <TextView
@@ -233,7 +248,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:textColor="@color/widget_default_text" />
 
             </LinearLayout>
 
@@ -241,7 +257,7 @@
                 android:id="@+id/imageView9"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="#767676" />
+                android:background="@color/widget_table_border" />
 
         </LinearLayout>
     </LinearLayout>
@@ -251,6 +267,6 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_weight="1"
-        android:background="#767676" />
+        android:background="@color/widget_table_border" />
 
 </LinearLayout>

@@ -1,4 +1,4 @@
-package de.jr.smtweaks.widgets.calendar;
+package de.jr.smtweaks.widgets.calendar.remoteview;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -12,14 +12,13 @@ import androidx.core.content.ContextCompat;
 import java.io.File;
 import java.io.IOException;
 
-import de.jr.smtweaks.util.CryptoUtil;
 import de.jr.smtweaks.R;
+import de.jr.smtweaks.util.CryptoUtil;
 import de.jr.smtweaks.util.GsonRepository;
+import de.jr.smtweaks.widgets.calendar.TableItem;
 
 public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory {
     private final Context context;
-    private TableItem[] items = new TableItem[0];
-    private final int defaultColor;
     private final int[][] textIdArray = {
             {R.id.t5l1, R.id.t5r1, R.id.t5b1},
             {R.id.t5l2, R.id.t5r2, R.id.t5b2},
@@ -27,11 +26,11 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
             {R.id.t5l4, R.id.t5r4, R.id.t5b4},
             {R.id.t5l5, R.id.t5r5, R.id.t5b5}
     };
+    private TableItem[] items = new TableItem[0];
 
-    public RemoteViewFactory(Context context){
+    public RemoteViewFactory(Context context) {
         this.context = context;
         onDataSetChanged();
-        this.defaultColor = ContextCompat.getColor(context, R.color.widget_default_text);
     }
 
     @Override
@@ -49,12 +48,13 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
 
     @Override
     public RemoteViews getLoadingView() {
-        return new RemoteViews(context.getPackageName(), R.layout.calendar_table_widget);
+        return new RemoteViews(context.getPackageName(), R.layout.calendar_widget_five_items);
     }
 
 
     @Override
     public RemoteViews getViewAt(int position) {
+        int defaultColor = ContextCompat.getColor(context, R.color.widget_default_text);
         if (items == null) {
             return null;
         }

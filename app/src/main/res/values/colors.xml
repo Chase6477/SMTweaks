@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="widget_default_text">#434343</color>
+    <color name="widget_default_text">#2C2C2C</color>
+    <color name="widget_primary">#6750A4</color>
+    <color name="widget_primary_inverse">#D0BCFF</color>
+    <color name="widget_background">#D0FFFFFF</color>
+    <color name="widget_table_border">#282828</color>
+    <color name="widget_fat_text">#141414</color>
 </resources>
