@@ -3,5 +3,7 @@
     android:minWidth="180dp"
     android:minHeight="100dp"
     android:initialLayout="@layout/calendar_table_widget"
+    android:updatePeriodMillis="0"
+    android:configure="de.jr.smtweaks.widgets.calendar.ConfigurationActivity"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen" />

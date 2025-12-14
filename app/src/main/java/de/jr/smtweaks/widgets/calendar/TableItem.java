@@ -4,10 +4,10 @@ public class TableItem {
 
     private final String leftTop;
     private final String rightTop;
-    private final String rightTopAlternate;
+    private String rightTopAlternate;
     private final String bottom;
-    private final String bottomAlternate;
-    private final boolean isCancelled;
+    private String bottomAlternate;
+    private boolean isCancelled;
     private final int col;
     private final int row;
 
@@ -34,6 +34,10 @@ public class TableItem {
         return rightTopAlternate;
     }
 
+    public void setRightTopAlternate(String rightTopAlternate) {
+        this.rightTopAlternate = rightTopAlternate;
+    }
+
     public String getBottom() {
         return bottom;
     }
@@ -42,8 +46,16 @@ public class TableItem {
         return bottomAlternate;
     }
 
+    public void setBottomAlternate(String bottomAlternate) {
+        this.bottomAlternate = bottomAlternate;
+    }
+
     public boolean getIsCancelled() {
         return isCancelled;
+    }
+
+    public void setIsCancelled(boolean isCancelled) {
+        this.isCancelled = isCancelled;
     }
 
     public int getRow() {

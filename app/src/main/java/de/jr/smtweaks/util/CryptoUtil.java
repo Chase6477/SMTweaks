@@ -1,7 +1,6 @@
 package de.jr.smtweaks.util;
 
 import android.content.Context;
-import android.os.Build;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 import android.util.Log;
@@ -19,7 +18,6 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 
 /**
  * This Util class is from one of my other work-in-progress apps (hopefully cuming soon)
@@ -31,10 +29,6 @@ public class CryptoUtil {
     public static final int GCM_IV_SIZE = 12;
     private static final int BUFFER_SIZE = 1024;
 
-
-    public static SecretKey regenerateSecretKey(byte[] key) {
-        return new SecretKeySpec(key, "AES");
-    }
 
     public static void encrypt(byte[] plainData, SecretKey key, Context fileContext, String fileName) {
         try {
@@ -91,7 +85,7 @@ public class CryptoUtil {
         }
     }
 
-    public static SecretKey getKeyStoreSecretKey(String alias, boolean useBiometrics) {
+    public static SecretKey getKeyStoreSecretKey(String alias) {
         try {
             KeyStore ks = KeyStore.getInstance("AndroidKeyStore");
             ks.load(null);
@@ -102,7 +96,7 @@ public class CryptoUtil {
                 KeyGenerator keyGenerator = KeyGenerator.getInstance(
                         KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore");
 
-                KeyGenParameterSpec.Builder keyGen = getBuilder(alias, useBiometrics);
+                KeyGenParameterSpec.Builder keyGen = getBuilder(alias);
                 keyGenerator.init(keyGen.build());
                 secretKey = keyGenerator.generateKey();
             }
@@ -113,33 +107,13 @@ public class CryptoUtil {
         }
     }
 
-    public static void deleteKeyStoreSecretKey(String alias) {
-        try {
-            KeyStore ks = KeyStore.getInstance("AndroidKeyStore");
-            ks.load(null);
-            ks.deleteEntry(alias);
-        } catch (Exception e) {
-            Log.e("Key", "Could not delete key from keystore", e);
-        }
-    }
+    private static KeyGenParameterSpec.Builder getBuilder(String alias) {
 
-    private static KeyGenParameterSpec.Builder getBuilder(String alias, boolean useBiometrics) {
-        KeyGenParameterSpec.Builder keyGen = new KeyGenParameterSpec.Builder(
+        return new KeyGenParameterSpec.Builder(
                 alias,
                 KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
                 .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
                 .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE);
-
-        if (useBiometrics) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                keyGen.setUserAuthenticationRequired(true)
-                        .setUserAuthenticationParameters(0, KeyProperties.AUTH_BIOMETRIC_STRONG);
-            } else {
-                keyGen.setUserAuthenticationRequired(true)
-                        .setUserAuthenticationValidityDurationSeconds(-1);
-            }
-        }
-        return keyGen;
     }
 
     public static class FileNames {

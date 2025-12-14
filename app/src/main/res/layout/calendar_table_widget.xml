@@ -20,22 +20,24 @@
 
             <TextView
                 android:id="@+id/textView"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Last Updated: 01.01.1970" />
+                android:text="@string/calendar_table_widget_last_update" />
 
             <Button
                 android:id="@+id/button"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:backgroundTint="#121212"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:text="Update now"
+                android:insetTop="8dp"
+                android:insetBottom="8dp"
+                android:text="@string/calendar_table_widget_update"
                 android:textColor="@color/widget_default_text"
-                app:cornerRadius="100dp" />
+                android:textSize="14sp"
+                app:cornerRadius="100dp"
+                app:iconGravity="textStart" />
         </LinearLayout>
 
         <include

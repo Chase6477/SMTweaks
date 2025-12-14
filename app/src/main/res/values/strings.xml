@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">SM Tweaks</string>
+    <string name="calendar_table_widget_last_update">Last update: %s</string>
+    <string name="calendar_table_widget_last_update_never">Never</string>
+    <string name="wron_login_toast">Wrong login data</string>
+    <string name="widget_updater_fetching_data">Fetching data</string>
+    <string name="calendar_table_widget_configuration">Calendar table configuration</string>
+    <string name="calendar_widget_configuration_username">Username:</string>
+    <string name="calendar_widget_configuration_password">Password:</string>
+    <string name="calendar_widget_configuration_show_last_week_switch">Show last week</string>
+    <string name="calendar_table_widget_update">Update</string>
+    <string name="day_monday">Mo</string>
+    <string name="day_tuesday">Tu</string>
+    <string name="day_wednesday">We</string>
+    <string name="day_thursday">Th</string>
+    <string name="day_friday">Fr</string>
 </resources>

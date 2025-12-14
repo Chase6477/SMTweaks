@@ -10,4 +10,8 @@ public class GsonRepository implements JsonParser{
     public TableItem[] jsonToTableItemList(String json) {
         return gson.fromJson(json, TableItem[].class);
     }
+    @Override
+    public String tableItemListToJson(TableItem[] items) {
+        return gson.toJson(items);
+    }
 }

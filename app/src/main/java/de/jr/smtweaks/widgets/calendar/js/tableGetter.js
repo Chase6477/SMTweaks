@@ -33,13 +33,13 @@ let array = [];
       let rightTopAlternate = null;
       if (parts[1].includes(") ")) {
         rightTopAlternate = parts[1].split(") ")[1].trim();
-        rightTop = parts[1].split(") ")[0] + ")".trim();
+        rightTop = parts[1].split(") ")[0].trim().replace(/[()]/g, "");
       }
       let bottom = parts[2];
       let bottomAlternate = null;
       if (parts[2].includes(") ")) {
         bottomAlternate = parts[2].split(") ")[1].trim();
-        bottom = parts[2].split(") ")[0] + ")".trim();
+        bottom = parts[2].split(") ")[0].trim().replace(/[()]/g, "");
       }
       array.push(new Item(leftTop, rightTop, rightTopAlternate, bottom, bottomAlternate, isCancelled, row, col))
     }
