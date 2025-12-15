@@ -38,7 +38,11 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
         if (items == null) {
             return 0;
         }
-        return items.length;
+        int largest = 0;
+        for (TableItem t: items) {
+            largest = Math.max(largest, t.getRow());
+        }
+        return largest;
     }
 
     @Override
@@ -55,11 +59,17 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
     @Override
     public RemoteViews getViewAt(int position) {
         int defaultColor = ContextCompat.getColor(context, R.color.widget_default_text);
+        int greenColor = ContextCompat.getColor(context, R.color.widget_green);
         if (items == null) {
             return null;
         }
         RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.calendar_widget_five_items);
         rv.setTextViewText(R.id.cell0, String.valueOf(position + 1));
+        for (int i = 0; i < 5; i++) {
+            rv.setTextViewText(textIdArray[i][0], "");
+            rv.setTextViewText(textIdArray[i][1], "");
+            rv.setTextViewText(textIdArray[i][2], "");
+        }
         for (TableItem item : items) {
             if (item.getRow() == position + 1) {
                 int[] text = textIdArray[item.getCol() - 1];
@@ -68,7 +78,7 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
 
                 if (item.getBottomAlternate() != null) {
                     rv.setTextViewText(text[2], item.getBottomAlternate());
-                    rv.setTextColor(text[2], Color.GREEN);
+                    rv.setTextColor(text[2], greenColor);
                 } else {
                     rv.setTextColor(text[2], defaultColor);
                     rv.setTextViewText(text[2], item.getBottom());
@@ -76,7 +86,7 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
 
                 if (item.getRightTopAlternate() != null) {
                     rv.setTextViewText(text[1], item.getRightTopAlternate());
-                    rv.setTextColor(text[1], Color.GREEN);
+                    rv.setTextColor(text[1], greenColor);
                 } else {
                     rv.setTextColor(text[1], defaultColor);
                     rv.setTextViewText(text[1], item.getRightTop());
