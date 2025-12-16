@@ -16,4 +16,12 @@
     <string name="day_thursday">Do</string>
     <string name="day_friday">Fr</string>
     <string name="calendar_widget_configuration_apply">Anwenden</string>
+    <string name="update_alert_update_available">App Update verfügbar</string>
+    <string name="update_alert_text">Eine neue Version für SMTweaks wurde veröffentlicht!</string>
+    <string name="update_alert_current_version">Installierte Version: %s</string>
+    <string name="update_alert_latest_version">Aktuellste Version: %s</string>
+    <string name="update_alert_option_later">Später</string>
+    <string name="update_alert_option_dont_show_again">Nicht mehr anzeigen</string>
+    <string name="update_alert_option_show_version">Neue Version im Browser anzeigen</string>
+    <string name="update_activite_update_check">Automatische Update Suche</string>
 </resources>

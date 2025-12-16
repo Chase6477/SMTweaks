@@ -5,6 +5,6 @@
     <color name="widget_primary_inverse">#D0BCFF</color>
     <color name="widget_background">#D0FFFFFF</color>
     <color name="widget_table_border">#282828</color>
-    <color name="widget_fat_text">#141414</color>
-    <color name="widget_green">#42A81C</color>
+    <color name="widget_fat_text">#2196F3</color>
+    <color name="widget_green">#038103</color>
 </resources>

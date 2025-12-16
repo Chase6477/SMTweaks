@@ -10,8 +10,8 @@ android {
         applicationId = "de.jr.smtweaks"
         minSdk = 26
         targetSdk = 36
-        versionCode = 3
-        versionName = "1.0"
+        versionCode = 5
+        versionName = "1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -33,8 +33,9 @@ android {
 
 dependencies {
 
-    implementation(libs.work.runtime)
     implementation(libs.gson)
+
+    implementation(libs.okhttp)
 
     implementation(libs.appcompat)
     implementation(libs.material)

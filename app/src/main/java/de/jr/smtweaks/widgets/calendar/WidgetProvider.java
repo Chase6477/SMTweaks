@@ -19,8 +19,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 import de.jr.smtweaks.R;
+import de.jr.smtweaks.UpdateActivity;
 import de.jr.smtweaks.util.CryptoUtil;
-import de.jr.smtweaks.util.UpdateActivity;
 import de.jr.smtweaks.widgets.calendar.remoteview.RemoteViewService;
 
 public class WidgetProvider extends AppWidgetProvider {
@@ -29,17 +29,37 @@ public class WidgetProvider extends AppWidgetProvider {
     public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.calendar_table_widget);
         updateRemoteViewFormats(views, context);
+
         Intent serviceIntent = new Intent(context, RemoteViewService.class);
         serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         serviceIntent.setData(Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME)));
         views.setRemoteAdapter(R.id.listView, serviceIntent);
+
+        views.setOnClickPendingIntent(R.id.button, generatePendingIntent(context, appWidgetId));
+
         appWidgetManager.updateAppWidget(appWidgetId, views);
+    }
+
+    public static PendingIntent generatePendingIntent(Context context, int appWidgetId) {
+        Intent activityIntent = new Intent(context, UpdateActivity.class);
+        activityIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        activityIntent.setData(Uri.parse(activityIntent.toUri(Intent.URI_INTENT_SCHEME)));
+        return PendingIntent.getActivity(
+                context,
+                appWidgetId,
+                activityIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
     }
 
     private static void updateRemoteViewFormats(RemoteViews views, Context context) {
         int dayOfWeek = (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 5) % 7;
+        for (int i = 0; i < 5; i++) {
+            views.setTextColor(headerIDs[i], ContextCompat.getColor(context, R.color.widget_default_text));
+        }
         if (dayOfWeek <= 4) {
-            views.setTextColor(headerIDs[dayOfWeek], ContextCompat.getColor(context, R.color.widget_default_text));
+            views.setTextColor(headerIDs[dayOfWeek], ContextCompat.getColor(context, R.color.widget_fat_text));
             views.setInt(
                     headerIDs[dayOfWeek],
                     "setPaintFlags",
@@ -61,24 +81,7 @@ public class WidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         for (int appWidgetId : appWidgetIds) {
-            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.calendar_table_widget);
-            updateRemoteViewFormats(views, context);
-
-            Intent serviceIntent = new Intent(context, RemoteViewService.class);
-            serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-            serviceIntent.setData(Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME)));
-            views.setRemoteAdapter(R.id.listView, serviceIntent);
-
-            Intent activityIntent = new Intent(context, UpdateActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(
-                    context,
-                    appWidgetId,
-                    activityIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
-            );
-            views.setOnClickPendingIntent(R.id.button, pendingIntent);
-
-            appWidgetManager.updateAppWidget(appWidgetId, views);
+            updateAppWidget(context, appWidgetManager, appWidgetId);
         }
     }
 

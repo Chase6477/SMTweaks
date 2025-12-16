@@ -1,4 +1,4 @@
-package de.jr.smtweaks.util;
+package de.jr.smtweaks;
 
 import android.annotation.SuppressLint;
 import android.appwidget.AppWidgetManager;
@@ -13,6 +13,7 @@ import android.util.Log;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.CheckBox;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,62 +26,89 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
-import de.jr.smtweaks.R;
+import de.jr.smtweaks.util.CryptoUtil;
+import de.jr.smtweaks.util.GsonRepository;
 import de.jr.smtweaks.widgets.calendar.TableItem;
 import de.jr.smtweaks.widgets.calendar.WidgetProvider;
 
 
 public class UpdateActivity extends AppCompatActivity {
+    private static final int TIMEOUT_DURATION = 30000;
     private WebView webView;
 
-    @SuppressLint("SetJavaScriptEnabled")
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        update();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new GithubUpdateChecker(this, activity -> activity.runOnUiThread(this::update));
+    }
 
+    @SuppressLint("SetJavaScriptEnabled")
+    private void update() {
         setContentView(R.layout.activity_webview);
-
         webView = new WebView(this);
+        int widgetID = getIntent().getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
+        SharedPreferences widgetPrefs = getSharedPreferences(getString(R.string.calendar_widget_preference, widgetID), Context.MODE_PRIVATE);
+        SharedPreferences mainPrefs = getSharedPreferences("main_preference", Context.MODE_PRIVATE);
+
+        CheckBox checkForUpdatesChecker = findViewById(R.id.checkBox);
+        if (mainPrefs.getBoolean("show_update_alert", true)) {
+            checkForUpdatesChecker.setVisibility(CheckBox.GONE);
+        } else {
+            checkForUpdatesChecker.setOnCheckedChangeListener(
+                    (buttonView, isChecked) ->
+                            mainPrefs.edit().putBoolean("show_update_alert", true).apply()
+            );
+        }
+
+        if (widgetID == -1)
+            finishAndRemoveTask();
         Context context = this;
 
         webView.setWebViewClient(new WebViewClient() {
+            int timeout = 0;
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                SharedPreferences prefs = getSharedPreferences("calendar_widget_preferences", Context.MODE_PRIVATE);
                 webView.evaluateJavascript(
                         JavaScripts.outerHtml,
                         html -> {
                             if (Identifier.identify("passwordPage", html, url)) {
                                 String password;
 
-                                if (prefs.getString("username", null) == null) {
-                                    finish();
+                                if (mainPrefs.getString("username", null) == null) {
+                                    finishAndRemoveTask();
                                     return;
                                 }
                                 try {
                                     byte[] passwordBytes = CryptoUtil.decrypt(CryptoUtil.getKeyStoreSecretKey("passwordKey"), context, CryptoUtil.FileNames.ENC_USER_DATA_FILE_NAME);
                                     if (passwordBytes == null) {
-                                        finish();
+                                        finishAndRemoveTask();
                                         return;
                                     }
                                     password = new String(passwordBytes);
                                 } catch (Exception e) {
-                                    finish();
+                                    finishAndRemoveTask();
                                     return;
                                 }
 
                                 webView.evaluateJavascript(
-                                        JavaScripts.login + "(\"" + prefs.getString("username", null) + "\", \"" + password + "\")",
-                                        asd -> {
+                                        JavaScripts.login + "(\"" + mainPrefs.getString("username", null) + "\", \"" + password + "\")",
+                                        login -> {
                                             Handler handler = new Handler(Looper.getMainLooper());
                                             handler.postDelayed(() -> webView.evaluateJavascript(JavaScripts.outerHtml,
-                                                    asdasd -> {
+                                                    loginCheck -> {
 
-                                                        if (Identifier.identify("wrongLogin", asdasd, "")) {
+                                                        if (Identifier.identify("wrongLogin", loginCheck, "")) {
                                                             Toast.makeText(context, getString(R.string.wron_login_toast), Toast.LENGTH_LONG).show();
-                                                            finish();
+                                                            finishAndRemoveTask();
                                                         }
                                                     }), 5000);
                                         }
@@ -88,29 +116,32 @@ public class UpdateActivity extends AppCompatActivity {
                             } else if (Identifier.identify("calendarPage", html, url)) {
                                 webView.evaluateJavascript(
                                         JavaScripts.tableGetter,
-                                        asd -> {
-                                            String tableData = asd.substring(1, asd.length() - 1)
+                                        calendarOutput -> {
+                                            String tableData = calendarOutput.substring(1, calendarOutput.length() - 1)
                                                     .replace("\\\"", "\"")
                                                     .replace("\\\\", "\\");
                                             try {
-                                                if (prefs.getBoolean(getString(R.string.calendar_widget_configuration_show_last_week_switch), false)) {
-                                                    TableItem[] merged = getFullWeekTableItems(new GsonRepository().jsonToTableItemList(tableData));
-                                                    CryptoUtil.writeFile(new File(context.getFilesDir(), CryptoUtil.FileNames.PLAIN_CALENDAR_TABLE_DATA_FILE_NAME), new GsonRepository().tableItemListToJson(merged).getBytes(StandardCharsets.UTF_8));
-                                                } else {
-                                                    CryptoUtil.writeFile(new File(context.getFilesDir(), CryptoUtil.FileNames.PLAIN_CALENDAR_TABLE_DATA_FILE_NAME), tableData.getBytes(StandardCharsets.UTF_8));
+                                                TableItem[] merged = getFullWeekTableItems(new GsonRepository().jsonToTableItemList(tableData));
+                                                CryptoUtil.writeFile(new File(context.getFilesDir(), CryptoUtil.FileNames.PLAIN_CALENDAR_TABLE_DATA_FILE_NAME), new GsonRepository().tableItemListToJson(merged).getBytes(StandardCharsets.UTF_8));
+                                                CryptoUtil.writeFile(new File(context.getFilesDir(), CryptoUtil.FileNames.PLAIN_CALENDAR_TABLE_DATA_FILE_NAME_SMALL), tableData.getBytes(StandardCharsets.UTF_8));
 
-                                                }
+
                                             } catch (IOException e) {
                                                 Log.e("File", "File was not found", e);
                                             }
                                             updateWidget();
-                                            finish();
+                                            finishAndRemoveTask();
                                         }
                                 );
                             } else {
                                 Handler handler = new Handler(Looper.getMainLooper());
-                                handler.postDelayed(() -> onPageFinished(webView, webView.getUrl()), 100
-                                );
+                                if (timeout >= TIMEOUT_DURATION) {
+                                    Toast.makeText(context, "Timeout", Toast.LENGTH_LONG).show();
+                                    finishAndRemoveTask();
+                                } else {
+                                timeout += 100;
+                                handler.postDelayed(() -> onPageFinished(webView, webView.getUrl()), 100);
+                                }
                             }
                         });
             }
@@ -178,6 +209,18 @@ public class UpdateActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finishAndRemoveTask();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        webView.destroy();
+    }
+
     /**
      * This class is for unique identifiers for each Page,
      * because I couldn't find a simpler method and url doesn't always work
@@ -192,7 +235,7 @@ public class UpdateActivity extends AppCompatActivity {
                 case "homePage":
                     return url.contains("https://login.schulmanager-online.de/#/dashboard/");
                 case "wrongLogin":
-                    return html.contains("alert alert-danger");
+                    return html.contains("alert alert-danger"); //false password field
             }
             return false;
         }

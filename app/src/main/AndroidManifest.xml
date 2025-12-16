@@ -16,7 +16,7 @@
 
         <receiver android:name=".widgets.calendar.WidgetProvider"
             android:exported="true"
-            android:label="SM Widget 1">
+            android:label="Calendar_Widget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -31,15 +31,16 @@
             android:exported="false" />
 
         <activity
-            android:name=".util.UpdateActivity"
-            android:hardwareAccelerated="true"
-            android:exported="true">
+            android:name=".UpdateActivity"
+            android:launchMode="singleTop"
+            android:exported="false">
         </activity>
 
         <activity
             android:name=".widgets.calendar.ConfigurationActivity"
             android:exported="true"
             android:noHistory="true"
+            android:configChanges="uiMode|orientation|screenSize"
             android:excludeFromRecents="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
