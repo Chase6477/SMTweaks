@@ -13,18 +13,13 @@ Alle Widgets greifen auf die gleiche Konfiguration zu, wesswegen es reicht eines
 
 Bei Problemen gerne einen Issue erstellen oder eine Email an mich schreiben justusreiterdevelopment@gmail.com (super Email, ich weiß)
 
-Ansonsten kann es helfen den Prozess zu beenden, den Speicherplatz zu löschen oder das Widget neu zu platzieren
-
-<img width="20%" height="auto" alt="image" src="https://github.com/user-attachments/assets/bf3515dc-b038-4783-9eb6-434e94580102" />
-
-
 ## Anforderungen
 - Mindestens Android 8 (API 26)
 - Internetverbindung
 - Ein Schulmanager (Schüler-)Account
 
 ## Installieren
-- neueste version [Herunterladen](https://github.com/Chase6477/SMTweaks/releases)
+- neueste version [Herunterladen](https://github.com/Chase6477/SMTweaks/releases/latest)
 
   *Beispiel: SMT_1-0.apk*
   
