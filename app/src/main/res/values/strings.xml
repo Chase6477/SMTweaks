@@ -19,9 +19,10 @@
     <string name="update_alert_update_available">App update available</string>
     <string name="update_alert_text">A new Version for SMTweaks was published!</string>
     <string name="update_alert_current_version">Installed Version: %s</string>
-    <string name="update_alert_latest_version">Latest Verison: %s</string>
+    <string name="update_alert_latest_version">Latest Version: %s</string>
     <string name="update_alert_option_later">Later</string>
     <string name="update_alert_option_dont_show_again">Don\'t show again</string>
     <string name="update_alert_option_show_version">Show new Version in Browser</string>
     <string name="update_activite_update_check">Automatic update check</string>
+    <string name="calendar_widget_is_loading">Loading…</string>
 </resources>

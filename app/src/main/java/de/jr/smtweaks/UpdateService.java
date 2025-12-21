@@ -1,22 +1,27 @@
 package de.jr.smtweaks;
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.Service;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
+import android.content.pm.ServiceInfo;
+import android.os.Build;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.CheckBox;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,49 +32,51 @@ import java.util.Collections;
 import java.util.List;
 
 import de.jr.smtweaks.util.CryptoUtil;
+import de.jr.smtweaks.util.GithubUpdateChecker;
 import de.jr.smtweaks.util.GsonRepository;
 import de.jr.smtweaks.widgets.calendar.TableItem;
 import de.jr.smtweaks.widgets.calendar.WidgetProvider;
 
-
-public class UpdateActivity extends AppCompatActivity {
+public class UpdateService extends Service {
     private static final int TIMEOUT_DURATION = 30000;
+
+    private Handler mainHandler;
     private WebView webView;
+    private Intent intent;
+    private int widgetID;
 
     @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent);
-        update();
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if (this.intent != null)
+            return START_NOT_STICKY;
+        this.intent = intent;
+        if (Build.VERSION.SDK_INT > 28)
+            startForeground(1, createNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC);
+        else
+            startForeground(1, createNotification());
+        GithubUpdateChecker.checkForUpdate(this);
+        mainHandler.post(this::update);
+
+        return START_NOT_STICKY;
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        new GithubUpdateChecker(this, activity -> activity.runOnUiThread(this::update));
+    public void onCreate() {
+        super.onCreate();
+        mainHandler = new Handler(Looper.getMainLooper());
     }
+
 
     @SuppressLint("SetJavaScriptEnabled")
     private void update() {
-        setContentView(R.layout.activity_webview);
         webView = new WebView(this);
-        int widgetID = getIntent().getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
-        SharedPreferences widgetPrefs = getSharedPreferences(getString(R.string.calendar_widget_preference, widgetID), Context.MODE_PRIVATE);
+        widgetID = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
         SharedPreferences mainPrefs = getSharedPreferences("main_preference", Context.MODE_PRIVATE);
 
-        CheckBox checkForUpdatesChecker = findViewById(R.id.checkBox);
-        if (mainPrefs.getBoolean("show_update_alert", true)) {
-            checkForUpdatesChecker.setVisibility(CheckBox.GONE);
-        } else {
-            checkForUpdatesChecker.setOnCheckedChangeListener(
-                    (buttonView, isChecked) ->
-                            mainPrefs.edit().putBoolean("show_update_alert", true).apply()
-            );
-        }
-
         if (widgetID == -1)
-            finishAndRemoveTask();
+            stop();
         Context context = this;
+        WidgetProvider.updateButtonText(this, widgetID, getString(R.string.calendar_widget_is_loading));
 
         webView.setWebViewClient(new WebViewClient() {
             int timeout = 0;
@@ -84,18 +91,18 @@ public class UpdateActivity extends AppCompatActivity {
                                 String password;
 
                                 if (mainPrefs.getString("username", null) == null) {
-                                    finishAndRemoveTask();
+                                    stop();
                                     return;
                                 }
                                 try {
                                     byte[] passwordBytes = CryptoUtil.decrypt(CryptoUtil.getKeyStoreSecretKey("passwordKey"), context, CryptoUtil.FileNames.ENC_USER_DATA_FILE_NAME);
                                     if (passwordBytes == null) {
-                                        finishAndRemoveTask();
+                                        stop();
                                         return;
                                     }
                                     password = new String(passwordBytes);
                                 } catch (Exception e) {
-                                    finishAndRemoveTask();
+                                    stop();
                                     return;
                                 }
 
@@ -108,7 +115,7 @@ public class UpdateActivity extends AppCompatActivity {
 
                                                         if (Identifier.identify("wrongLogin", loginCheck, "")) {
                                                             Toast.makeText(context, getString(R.string.wron_login_toast), Toast.LENGTH_LONG).show();
-                                                            finishAndRemoveTask();
+                                                            stop();
                                                         }
                                                     }), 5000);
                                         }
@@ -124,23 +131,21 @@ public class UpdateActivity extends AppCompatActivity {
                                                 TableItem[] merged = getFullWeekTableItems(new GsonRepository().jsonToTableItemList(tableData));
                                                 CryptoUtil.writeFile(new File(context.getFilesDir(), CryptoUtil.FileNames.PLAIN_CALENDAR_TABLE_DATA_FILE_NAME), new GsonRepository().tableItemListToJson(merged).getBytes(StandardCharsets.UTF_8));
                                                 CryptoUtil.writeFile(new File(context.getFilesDir(), CryptoUtil.FileNames.PLAIN_CALENDAR_TABLE_DATA_FILE_NAME_SMALL), tableData.getBytes(StandardCharsets.UTF_8));
-
-
                                             } catch (IOException e) {
                                                 Log.e("File", "File was not found", e);
                                             }
                                             updateWidget();
-                                            finishAndRemoveTask();
+                                            stop();
                                         }
                                 );
                             } else {
                                 Handler handler = new Handler(Looper.getMainLooper());
-                                if (timeout >= TIMEOUT_DURATION) {
+                                if (timeout >= TIMEOUT_DURATION && timeout - 100 < TIMEOUT_DURATION) {
                                     Toast.makeText(context, "Timeout", Toast.LENGTH_LONG).show();
-                                    finishAndRemoveTask();
+                                    stop();
                                 } else {
-                                timeout += 100;
-                                handler.postDelayed(() -> onPageFinished(webView, webView.getUrl()), 100);
+                                    timeout += 100;
+                                    handler.postDelayed(() -> onPageFinished(webView, webView.getUrl()), 100);
                                 }
                             }
                         });
@@ -156,6 +161,49 @@ public class UpdateActivity extends AppCompatActivity {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl("https://login.schulmanager-online.de/#/modules/schedules/view//" + getMonday());
     }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    private Notification createNotification() {
+        String channelId = "smt_update_service";
+
+        NotificationChannel channel =
+                new NotificationChannel(
+                        channelId,
+                        "DOM Service",
+                        NotificationManager.IMPORTANCE_HIGH
+                );
+        getSystemService(NotificationManager.class)
+                .createNotificationChannel(channel);
+
+        return new NotificationCompat.Builder(this, channelId)
+                .setContentTitle("Updating data")
+                .setSmallIcon(R.drawable.smt)
+                .setOngoing(true)
+                .build();
+    }
+
+    private void stop() {
+        if (webView != null) {
+            webView.loadUrl("about:blank");
+            webView.stopLoading();
+            webView.removeAllViews();
+            webView.destroy();
+            webView = null;
+        }
+        WidgetProvider.updateButtonText(this, widgetID, getString(R.string.calendar_table_widget_update));
+        stopForeground(true);
+        stopSelf();
+    }
+
 
     private void updateWidget() {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
@@ -209,18 +257,6 @@ public class UpdateActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        finishAndRemoveTask();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        webView.destroy();
-    }
-
     /**
      * This class is for unique identifiers for each Page,
      * because I couldn't find a simpler method and url doesn't always work
@@ -242,7 +278,7 @@ public class UpdateActivity extends AppCompatActivity {
     }
 
     /**
-     * Ugly, but simpler an saver than using a InputStream for reading .js files...
+     * Ugly, but simpler and safer than using a InputStream reading .js files...
      * (The files are still in the package lol)
      */
     private static class JavaScripts {
@@ -306,4 +342,5 @@ public class UpdateActivity extends AppCompatActivity {
                 "\n" +
                 "return JSON.stringify(main())})()";
     }
+
 }

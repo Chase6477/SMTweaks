@@ -19,15 +19,24 @@ import java.util.Calendar;
 import java.util.Date;
 
 import de.jr.smtweaks.R;
-import de.jr.smtweaks.UpdateActivity;
+import de.jr.smtweaks.UpdateService;
 import de.jr.smtweaks.util.CryptoUtil;
 import de.jr.smtweaks.widgets.calendar.remoteview.RemoteViewService;
 
 public class WidgetProvider extends AppWidgetProvider {
     private static final int[] headerIDs = {R.id.header1, R.id.header2, R.id.header3, R.id.header4, R.id.header5};
 
-    public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.calendar_table_widget);
+    public static void updateButtonText(Context context, int appwidgetId, String text) {
+        RemoteViews views = generateRemoteView(context);
+        views.setTextViewText(R.id.button, text);
+        updateRemoteView(views, context, appwidgetId);
+    }
+
+    public static RemoteViews generateRemoteView(Context context) {
+        return new RemoteViews(context.getPackageName(), R.layout.calendar_table_widget);
+    }
+
+    public static void updateRemoteView(RemoteViews views, Context context, int appWidgetId) {
         updateRemoteViewFormats(views, context);
 
         Intent serviceIntent = new Intent(context, RemoteViewService.class);
@@ -37,20 +46,32 @@ public class WidgetProvider extends AppWidgetProvider {
 
         views.setOnClickPendingIntent(R.id.button, generatePendingIntent(context, appWidgetId));
 
-        appWidgetManager.updateAppWidget(appWidgetId, views);
+        AppWidgetManager.getInstance(context).updateAppWidget(appWidgetId, views);
+
     }
 
     public static PendingIntent generatePendingIntent(Context context, int appWidgetId) {
-        Intent activityIntent = new Intent(context, UpdateActivity.class);
-        activityIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        activityIntent.setData(Uri.parse(activityIntent.toUri(Intent.URI_INTENT_SCHEME)));
-        return PendingIntent.getActivity(
+        Intent intent = new Intent(context, WidgetProvider.class);
+        intent.setAction("de.jr.smtweaks.ACTION_UPDATE_CALENDAR");
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        PendingIntent pending = PendingIntent.getBroadcast(
                 context,
                 appWidgetId,
-                activityIntent,
+                intent,
+                PendingIntent.FLAG_NO_CREATE | PendingIntent.FLAG_IMMUTABLE
+        );
+
+        if (pending != null) {
+            return pending;
+        }
+
+        return PendingIntent.getBroadcast(
+                context,
+                appWidgetId,
+                intent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
+
     }
 
     private static void updateRemoteViewFormats(RemoteViews views, Context context) {
@@ -81,13 +102,19 @@ public class WidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId);
+            updateRemoteView(generateRemoteView(context) ,context, appWidgetId);
         }
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
+        if ("de.jr.smtweaks.ACTION_UPDATE_CALENDAR".equals(intent.getAction())) {
+            Intent serviceIntent = new Intent(context, UpdateService.class);
+            serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1));
+            ContextCompat.startForegroundService(context, serviceIntent);
+            return;
+        }
 
         if (AppWidgetManager.ACTION_APPWIDGET_UPDATE.equals(intent.getAction())) {
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
@@ -98,9 +125,10 @@ public class WidgetProvider extends AppWidgetProvider {
         }
     }
 
+
     @Override
     public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
-        updateAppWidget(context, appWidgetManager, appWidgetId);
+        updateRemoteView(generateRemoteView(context) ,context, appWidgetId);
     }
 }
