@@ -5,11 +5,9 @@
 
 
 ## Vorab
-Bei Erstellung eines neuen Widgets müssen die Logindaten für den Schulmanager angegeben werden. Diese werden verschlüsselt auf dem Gerät gespeichert und nur zum anfordern der Daten verwendet. Momentan wird 2FA nicht unterstützt und muss bei benutzung des widgets ausgestellt sein. (Aber ist nicht schwer zu implementieren, vielleicht kommts irgendwann)
+Die Angabe von einem korrekten Schulmanager Passwort und Nutzernamen ist für die App Erforderlich!
 
-Aufgrund der Richtlinien von Android ist es leider nicht möglich dieses Anfordern im Hintergrund auszuführen (Genauere Erklärung unten), darum wird beim updaten des Widgets immer ein Wartefenster erscheinen, welches je nach Internet und Performance 2-30 Sekunden dauern kann.
-
-Alle Widgets greifen auf die gleiche Konfiguration zu, wesswegen es reicht eines zu updaten. (Für den Fall dass ich mal mehr als eines einbaue)
+Momentan gibt es nur ein Widget für den Stundenplan und eine (fast leeren) Applikation, die für Einstellungen genutzt wird
 
 Bei Problemen gerne einen Issue erstellen oder eine Email an mich schreiben justusreiterdevelopment@gmail.com (super Email, ich weiß)
 
@@ -17,6 +15,7 @@ Bei Problemen gerne einen Issue erstellen oder eine Email an mich schreiben just
 - Mindestens Android 8 (API 26)
 - Internetverbindung
 - Ein Schulmanager (Schüler-)Account
+- Deaktivierte 2-Faktor Authentifizierung
 
 ## Installieren
 - neueste version [Herunterladen](https://github.com/Chase6477/SMTweaks/releases/latest)
@@ -30,7 +29,19 @@ Bei Problemen gerne einen Issue erstellen oder eine Email an mich schreiben just
 - Nach einem kurzen moment auf installieren / überprüfen lassen klicken
 - Nach einer Erfolgreichen Installation kann die Kategorie "SM Tweaks" jetzt in dem Widgetmenü gefunden werden
 
+## Updaten
+- Ab Version 1.1 wird bei einem neuen verfügbaren Update eine Popup-Nachricht angezeigt
+   - Später -- später
+   - Nicht mehr anzeigen -- Diese Meldung nicht mehr anzeigen, kann in der SM Tweaks app wieder angeschaltet werden
+   - Im Browser anzeigen -- Die Neueste Version auf GitHub öffnen
+ - Wie beim installieren die neueste .apk herunterladen
+ - In den eigenen Dateien anklicken / installieren
+ - Das Update sollte aumtomatisch installiert
 
+#### Probleme
+Sollte es bei dem Update Vorgang ein Problem geben ist
+- Überprüfen ob die neueste Version bereits installiert ist (App einstellungen, oben "Version: 1.x")
+- Ansonsten muss die App deinstalliert und neu installiert werden. Dies wird allerdings alle bereits vorhaneden Wochen Daten wieder Löschen
 
 ## Stundenplan
 
@@ -42,8 +53,11 @@ Bei Problemen gerne einen Issue erstellen oder eine Email an mich schreiben just
 - Benutzername
 - Speichern des Stundenplanes der letzten woche um ihn in der nächsten wieder anzuzeigen
 
+## Sicherheit
+Für die Sicherheit und den Datenschutz der app wird gesorgt
 
-
-## Warum kann das Widget das Update nicht im Hintergrund ausführen?
-
-Auf Android sind die Berechtigungen von Widgets im vergleich zu Apps stark eingeschränkt. Das anfordern der Daten funktioniert einfach nur durch ein skript welches automatisch die Logindaten in den android built-in Browser (WebView) eingibt und dann die nötigen Daten aus dem HTML Dokument auszulesen (Ich bin mir auch ziemlich sicher dass die Schulmanager app es genauso macht). WebView kann aber nur in einem UI-Thread laufen auf den nur Apps zugriff haben. Es ist nicht möglich ihn offiziell mit einem Widget zu erreichen. Es gibt ein paar Wege diese Sperre zu umgehen, aber die meisten davon sind relativ Instabil oder nicht auf jeder android version verfügbar, jedenfalls hat keiner der Wege für mich funktioniert :(
+1. Komplette Verschlüsselung der Benutzerdaten
+    - Kann nur von der App entschlüsselt werden
+    - Wird nur privat zum anmelden am Schulmanager verwendet
+2. Es werden keine Daten gesammelt
+3. Der einzige Austausch der über das Internet erfolgt, neben der Datenanfrage an Schulmanager ist eine abstellbare App-Update Suche
