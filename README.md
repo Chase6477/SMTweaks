@@ -5,32 +5,43 @@
 
 
 ## Vorab
-Bei Erstellung eines neuen Widgets müssen die Logindaten für den Schulmanager angegeben werden. Diese werden verschlüsselt auf dem Gerät gespeichert und nur zum anfordern der Daten verwendet. Momentan wird 2FA nicht unterstützt und muss bei benutzung des widgets ausgestellt sein. (Aber ist nicht schwer zu implementieren, vielleicht kommts irgendwann)
+Die Angabe von einem korrekten Schulmanager Passwort und Nutzernamen ist für die App erforderlich!
 
-Aufgrund der Richtlinien von Android ist es leider nicht möglich dieses Anfordern im Hintergrund auszuführen (Genauere Erklärung unten), darum wird beim updaten des Widgets immer ein Wartefenster erscheinen, welches je nach Internet und Performance 2-30 Sekunden dauern kann.
+Momentan gibt es nur ein Widget für den Stundenplan und eine (fast leere) Applikation, die für Einstellungen genutzt wird
 
-Alle Widgets greifen auf die gleiche Konfiguration zu, wesswegen es reicht eines zu updaten. (Für den Fall dass ich mal mehr als eines einbaue)
-
-Bei Problemen gerne einen Issue erstellen oder eine Email an mich schreiben justusreiterdevelopment@gmail.com (super Email, ich weiß)
+Bei Problemen gerne einen Issue erstellen oder eine E-mail an mich schreiben justusreiterdevelopment@gmail.com (super E-mail, ich weiß)
 
 ## Anforderungen
 - Mindestens Android 8 (API 26)
 - Internetverbindung
 - Ein Schulmanager (Schüler-)Account
+- Deaktivierte 2-Faktor Authentifizierung
 
 ## Installieren
-- neueste version [Herunterladen](https://github.com/Chase6477/SMTweaks/releases/latest)
+- neueste Version [Herunterladen](https://github.com/Chase6477/SMTweaks/releases/latest)
 
   *Beispiel: SMT_1-0.apk*
   
   <img width="70%" height="auto" alt="image" src="https://github.com/user-attachments/assets/a9d81ff6-6af6-4c91-8f43-b0125bebd39d" />
 
-- Wenn die Datei heruntergeladen wurde kann sie in den eigenen datein unter APK oder Downloads gefunden und ausgeführt werden
-- Es kann sein dass zuerst die Berechtigung vom Installieren von APK dateien angestellt werden muss
-- Nach einem kurzen moment auf installieren / überprüfen lassen klicken
-- Nach einer Erfolgreichen Installation kann die Kategorie "SM Tweaks" jetzt in dem Widgetmenü gefunden werden
+- Wenn die Datei heruntergeladen wurde kann sie in den Eigenen Dateien unter APK oder Downloads gefunden und ausgeführt werden
+- Es kann sein, dass zuerst die Berechtigung vom Installieren von APK-Dateien erteilt werden muss
+- Nach einem kurzen Moment auf "installieren" bzw. "überprüfen" klicken
+- Nach einer Erfolgreichen Installation kann die Kategorie "SM Tweaks" jetzt im Widgetmenü gefunden werden
 
+## Updaten
+- Ab Version 1.1 wird bei einem neuen verfügbaren Update eine Popup-Nachricht angezeigt
+   - Später -- später
+   - Nicht mehr anzeigen -- Diese Meldung nicht mehr anzeigen, kann in der SM Tweaks app wieder angeschaltet werden
+   - Im Browser anzeigen -- Die Neueste Version auf GitHub öffnen
+ - Wie bei der Erstinstallation die neueste APK-Datei herunterladen
+ - In den eigenen Dateien anklicken / installieren
+ - Das Update sollte aumtomatisch installiert werden
 
+#### Probleme
+Sollte es bei dem Update-Vorgang ein Problem geben:
+- Überprüfen, ob die neueste Version bereits installiert ist (App Einstellungen, oben "Version: 1.x")
+- Ansonsten muss die App deinstalliert und neu installiert werden. Dies wird allerdings alle bereits vorhaneden (Wochen-)Daten Löschen
 
 ## Stundenplan
 
@@ -40,10 +51,13 @@ Bei Problemen gerne einen Issue erstellen oder eine Email an mich schreiben just
 #### Einstellungen
 - Passwort
 - Benutzername
-- Speichern des Stundenplanes der letzten woche um ihn in der nächsten wieder anzuzeigen
+- Speichern des Stundenplanes der letzten Woche, um ihn in der Nächsten wieder anzuzeigen
 
+## Sicherheit
+Für die Sicherheit und den Datenschutz der App wird gesorgt
 
-
-## Warum kann das Widget das Update nicht im Hintergrund ausführen?
-
-Auf Android sind die Berechtigungen von Widgets im vergleich zu Apps stark eingeschränkt. Das anfordern der Daten funktioniert einfach nur durch ein skript welches automatisch die Logindaten in den android built-in Browser (WebView) eingibt und dann die nötigen Daten aus dem HTML Dokument auszulesen (Ich bin mir auch ziemlich sicher dass die Schulmanager app es genauso macht). WebView kann aber nur in einem UI-Thread laufen auf den nur Apps zugriff haben. Es ist nicht möglich ihn offiziell mit einem Widget zu erreichen. Es gibt ein paar Wege diese Sperre zu umgehen, aber die meisten davon sind relativ Instabil oder nicht auf jeder android version verfügbar, jedenfalls hat keiner der Wege für mich funktioniert :(
+1. Komplette Verschlüsselung der Benutzerdaten
+    - Kann nur von der App entschlüsselt werden
+    - Wird nur privat zum Anmelden am Schulmanager verwendet
+2. Es werden keine Daten gesammelt
+3. Der einzige Austausch der über das Internet erfolgt, neben der Datenanfrage an Schulmanager, ist eine deaktivierbare App-Update Suche
