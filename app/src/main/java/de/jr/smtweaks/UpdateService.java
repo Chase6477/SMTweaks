@@ -34,6 +34,8 @@ import java.util.List;
 import de.jr.smtweaks.util.CryptoUtil;
 import de.jr.smtweaks.util.GithubUpdateChecker;
 import de.jr.smtweaks.util.GsonRepository;
+import de.jr.smtweaks.util.HolidayRequest;
+import de.jr.smtweaks.widgets.calendar.HolidayItem;
 import de.jr.smtweaks.widgets.calendar.TableItem;
 import de.jr.smtweaks.widgets.calendar.WidgetProvider;
 
@@ -54,6 +56,21 @@ public class UpdateService extends Service {
             startForeground(1, createNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC);
         else
             startForeground(1, createNotification());
+        HolidayRequest.getHolidays(this, new HolidayRequest.OnFinishedHolidayRequest() {
+            @Override
+            public void onFinishedHolidayRequest(HolidayItem[] items) {
+                if (items == null) {
+                    return;
+                }
+                try {
+                    CryptoUtil.writeFile(
+                            new File(getFilesDir(), CryptoUtil.FileNames.PLAIN_HOLIDAY_DATES_FILE_NAME),
+                            new GsonRepository().holidayItemListToJson(items).getBytes(StandardCharsets.UTF_8));
+                    //"[{\"endDate\":\"2026-07-01\",\"startDate\":\"2025-01-01\"}]".getBytes(StandardCharsets.UTF_8));
+                } catch (IOException ignore) {
+                }
+            }
+        });
         GithubUpdateChecker.checkForUpdate(this);
         mainHandler.post(this::update);
 
@@ -65,7 +82,6 @@ public class UpdateService extends Service {
         super.onCreate();
         mainHandler = new Handler(Looper.getMainLooper());
     }
-
 
     @SuppressLint("SetJavaScriptEnabled")
     private void update() {
@@ -199,6 +215,7 @@ public class UpdateService extends Service {
             webView.destroy();
             webView = null;
         }
+        mainHandler.removeCallbacks(this::update);
         WidgetProvider.updateButtonText(this, widgetID, getString(R.string.calendar_table_widget_update));
         stopForeground(true);
         stopSelf();
@@ -342,5 +359,4 @@ public class UpdateService extends Service {
                 "\n" +
                 "return JSON.stringify(main())})()";
     }
-
 }

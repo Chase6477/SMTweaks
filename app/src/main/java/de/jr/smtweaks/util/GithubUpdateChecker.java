@@ -23,7 +23,7 @@ import okhttp3.Response;
 
 public class GithubUpdateChecker {
 
-    public static void makeAlert(Activity activity, String currentVersion, String latestVersion, onFinishedUpdateRequest listener) {
+    public static void makeAlert(Activity activity, String currentVersion, String latestVersion, OnFinishedUpdateRequest listener) {
         activity.runOnUiThread(() -> {
             new AlertDialog.Builder(activity)
                     .setTitle(R.string.update_alert_update_available)
@@ -92,7 +92,7 @@ public class GithubUpdateChecker {
         });
     }
 
-    public interface onFinishedUpdateRequest {
+    public interface OnFinishedUpdateRequest {
         void onFinishedUpdateRequest(boolean exitActivity);
     }
 }

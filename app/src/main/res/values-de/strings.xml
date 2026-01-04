@@ -3,7 +3,7 @@
     <string name="app_name">SM Tweaks</string>
     <string name="calendar_table_widget_last_update">Letztes Update: %s</string>
     <string name="calendar_table_widget_last_update_never">Nie</string>
-    <string name="wron_login_toast">Fehlerhafte Login Daten</string>
+    <string name="wron_login_toast">Fehlerhafte Login-Daten</string>
     <string name="widget_updater_fetching_data">Daten werden angefordert</string>
     <string name="calendar_table_widget_configuration">Stundenplan Einstellungen</string>
     <string name="calendar_widget_configuration_username">Benutzername:</string>
@@ -23,6 +23,8 @@
     <string name="update_alert_option_later">Später</string>
     <string name="update_alert_option_dont_show_again">Nicht mehr anzeigen</string>
     <string name="update_alert_option_show_version">Neue Version im Browser anzeigen</string>
-    <string name="update_activite_update_check">Automatische Update Suche</string>
+    <string name="update_activity_update_check">Automatische Update Suche</string>
     <string name="calendar_widget_is_loading">Laden…</string>
+    <string name="calendar_widget_configuration_state">Bundesland</string>
+    <string name="calendar_config_show_holidays">Ferien anzeigen</string>
 </resources>

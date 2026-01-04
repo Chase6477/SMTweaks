@@ -14,29 +14,35 @@ import androidx.core.content.ContextCompat;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Calendar;
 
 import de.jr.smtweaks.R;
 import de.jr.smtweaks.util.CryptoUtil;
 import de.jr.smtweaks.util.GsonRepository;
+import de.jr.smtweaks.widgets.calendar.HolidayItem;
 import de.jr.smtweaks.widgets.calendar.TableItem;
 
 public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory {
     private final Context context;
     private final int widgetID;
-    private final SharedPreferences prefs;
+    private final SharedPreferences widgetPrefs;
     private final int[][] textIdArray = {
-            {R.id.t5l1, R.id.t5r1, R.id.t5b1},
-            {R.id.t5l2, R.id.t5r2, R.id.t5b2},
-            {R.id.t5l3, R.id.t5r3, R.id.t5b3},
-            {R.id.t5l4, R.id.t5r4, R.id.t5b4},
-            {R.id.t5l5, R.id.t5r5, R.id.t5b5}
+            {R.id.t5l1, R.id.t5r1, R.id.t5b1, R.id.bg51},
+            {R.id.t5l2, R.id.t5r2, R.id.t5b2, R.id.bg52},
+            {R.id.t5l3, R.id.t5r3, R.id.t5b3, R.id.bg53},
+            {R.id.t5l4, R.id.t5r4, R.id.t5b4, R.id.bg54},
+            {R.id.t5l5, R.id.t5r5, R.id.t5b5, R.id.bg55}
     };
+    private HolidayItem[] holidayItems;
     private TableItem[] items = new TableItem[0];
 
     public RemoteViewFactory(Context context, Intent intent) {
         this.context = context;
         this.widgetID = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
-        this.prefs = context.getSharedPreferences(context.getString(R.string.calendar_widget_preference, widgetID), Context.MODE_PRIVATE);
+        this.widgetPrefs = context.getSharedPreferences(context.getString(R.string.calendar_widget_preference, widgetID), Context.MODE_PRIVATE);
+
         if (widgetID == -1)
             return;
         onDataSetChanged();
@@ -73,13 +79,34 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
             return null;
         }
         RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.calendar_widget_five_items);
+
         rv.setTextViewText(R.id.cell0, String.valueOf(position + 1));
         for (int i = 0; i < 5; i++) {
+            rv.setInt(textIdArray[i][3], "setBackgroundColor", Color.TRANSPARENT);
             for (int j = 0; j < 3; j++) {
                 rv.setTextViewText(textIdArray[i][j], "");
             }
         }
+
+        if (holidayItems != null && widgetPrefs.getBoolean("show_holidays", true)) {
+            Calendar day = getMonday();
+            LocalDate localDate;
+            for (int i = 0; i < 5; i++) {
+                localDate = day.toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate();
+                for (int j = 0; j < holidayItems.length; j++) {
+                    if (holidayItems[j].containsDate(localDate)) {
+                        rv.setInt(textIdArray[i][3], "setBackgroundColor", ContextCompat.getColor(context, R.color.widget_alert_red));
+                        break;
+                    }
+                }
+                day.add(Calendar.DAY_OF_MONTH, 1);
+            }
+        }
+
         for (TableItem item : items) {
+
             if (item.getRow() == position + 1) {
                 int[] text = textIdArray[item.getCol() - 1];
                 setText(rv, text[0], item.getLeftTop(), defaultColor);
@@ -124,6 +151,17 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
         rv.setTextViewText(textID, text);
     }
 
+    private Calendar getMonday() {
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+        if (day != Calendar.SATURDAY && day != Calendar.SUNDAY) {
+            calendar.add(Calendar.DAY_OF_MONTH, Calendar.MONDAY - day);
+            return calendar;
+        }
+        calendar.add(Calendar.DAY_OF_MONTH, (Calendar.MONDAY - day + 7) % 7);
+        return calendar;
+    }
+
     @Override
     public int getViewTypeCount() {
         return 1;
@@ -138,7 +176,7 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
     public void onDataSetChanged() {
         try {
             String fileName;
-            if (prefs.getBoolean("show_last_week", true))
+            if (widgetPrefs.getBoolean("show_last_week", true))
                 fileName = CryptoUtil.FileNames.PLAIN_CALENDAR_TABLE_DATA_FILE_NAME;
             else
                 fileName = CryptoUtil.FileNames.PLAIN_CALENDAR_TABLE_DATA_FILE_NAME_SMALL;
@@ -149,11 +187,22 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
         } catch (IOException e) {
             Log.e("Data", "Data file not found", e);
         }
+
+        try {
+
+            holidayItems = new GsonRepository().jsonTHolidayItemList(
+                    new String(CryptoUtil.readFile(
+                            new File(context.getFilesDir(), CryptoUtil.FileNames.PLAIN_HOLIDAY_DATES_FILE_NAME)
+                    )));
+        } catch (IOException ignored) {
+        }
     }
 
     @Override
-    public void onCreate() {}
+    public void onCreate() {
+    }
 
     @Override
-    public void onDestroy() {}
+    public void onDestroy() {
+    }
 }

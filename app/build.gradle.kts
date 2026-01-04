@@ -34,6 +34,7 @@ android {
 dependencies {
 
     implementation(libs.gson)
+    implementation(libs.commons.codec)
 
     implementation(libs.okhttp)
 

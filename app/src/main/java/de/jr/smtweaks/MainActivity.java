@@ -38,8 +38,10 @@ public class MainActivity extends AppCompatActivity {
                             finishAndRemoveTask();
                         start();
                     });
+                    break;
                 default:
                     start();
+                    break;
             }
         } else {
             start();

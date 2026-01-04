@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,7 +29,7 @@ public class WidgetProvider extends AppWidgetProvider {
 
     public static void updateButtonText(Context context, int appwidgetId, String text) {
         RemoteViews views = generateRemoteView(context);
-        views.setTextViewText(R.id.button, text);
+        views.setTextViewText(R.id.calendar_widget_update, text);
         updateRemoteView(views, context, appwidgetId);
     }
 
@@ -42,9 +43,9 @@ public class WidgetProvider extends AppWidgetProvider {
         Intent serviceIntent = new Intent(context, RemoteViewService.class);
         serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         serviceIntent.setData(Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME)));
-        views.setRemoteAdapter(R.id.listView, serviceIntent);
+        views.setRemoteAdapter(R.id.calendar_widget_list, serviceIntent);
 
-        views.setOnClickPendingIntent(R.id.button, generatePendingIntent(context, appWidgetId));
+        views.setOnClickPendingIntent(R.id.calendar_widget_update, generatePendingIntent(context, appWidgetId));
 
         AppWidgetManager.getInstance(context).updateAppWidget(appWidgetId, views);
 
@@ -78,6 +79,7 @@ public class WidgetProvider extends AppWidgetProvider {
         int dayOfWeek = (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 5) % 7;
         for (int i = 0; i < 5; i++) {
             views.setTextColor(headerIDs[i], ContextCompat.getColor(context, R.color.widget_default_text));
+            views.setInt(headerIDs[i], "setBackgroundColor", Color.TRANSPARENT);
         }
         if (dayOfWeek <= 4) {
             views.setTextColor(headerIDs[dayOfWeek], ContextCompat.getColor(context, R.color.widget_fat_text));
@@ -90,19 +92,19 @@ public class WidgetProvider extends AppWidgetProvider {
         }
         File file = new File(context.getFilesDir(), CryptoUtil.FileNames.PLAIN_CALENDAR_TABLE_DATA_FILE_NAME);
         if (!file.exists())
-            views.setTextViewText(R.id.textView, context.getString(R.string.calendar_table_widget_last_update, context.getString(R.string.calendar_table_widget_last_update_never)));
+            views.setTextViewText(R.id.calendar_widget_last_update, context.getString(R.string.calendar_table_widget_last_update, context.getString(R.string.calendar_table_widget_last_update_never)));
         else {
             Date fileDate = new Date(file.lastModified());
             String date = android.text.format.DateFormat.getDateFormat(context).format(fileDate);
             String time = android.text.format.DateFormat.getTimeFormat(context).format(fileDate);
-            views.setTextViewText(R.id.textView, context.getString(R.string.calendar_table_widget_last_update, date + " " + time));
+            views.setTextViewText(R.id.calendar_widget_last_update, context.getString(R.string.calendar_table_widget_last_update, date + " " + time));
         }
     }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         for (int appWidgetId : appWidgetIds) {
-            updateRemoteView(generateRemoteView(context) ,context, appWidgetId);
+            updateRemoteView(generateRemoteView(context), context, appWidgetId);
         }
     }
 
@@ -120,7 +122,7 @@ public class WidgetProvider extends AppWidgetProvider {
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             ComponentName thisWidget = new ComponentName(context, WidgetProvider.class);
             int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.listView);
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.calendar_widget_list);
             onUpdate(context, appWidgetManager, appWidgetIds);
         }
     }
@@ -129,6 +131,6 @@ public class WidgetProvider extends AppWidgetProvider {
     @Override
     public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
-        updateRemoteView(generateRemoteView(context) ,context, appWidgetId);
+        updateRemoteView(generateRemoteView(context), context, appWidgetId);
     }
 }

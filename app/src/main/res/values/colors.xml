@@ -7,4 +7,5 @@
     <color name="widget_table_border">#282828</color>
     <color name="widget_fat_text">#2196F3</color>
     <color name="widget_green">#038103</color>
+    <color name="widget_alert_red">#50FF0000</color>
 </resources>

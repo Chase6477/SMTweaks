@@ -4,12 +4,12 @@ public class TableItem {
 
     private final String leftTop;
     private final String rightTop;
-    private String rightTopAlternate;
     private final String bottom;
-    private String bottomAlternate;
-    private boolean isCancelled;
     private final int col;
     private final int row;
+    private String rightTopAlternate;
+    private String bottomAlternate;
+    private boolean isCancelled;
 
     public TableItem(String leftTop, String rightTop, String rightTopAlternate, String bottom, String bottomAlternate, boolean isCancelled, int row, int col) {
         this.leftTop = leftTop;

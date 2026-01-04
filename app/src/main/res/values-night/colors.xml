@@ -3,8 +3,9 @@
     <color name="widget_default_text">#D0D0D0</color>
     <color name="widget_primary">#D0BCFF</color>
     <color name="widget_primary_inverse">#6750A4</color>
-    <color name="widget_background">#B0000000</color>
+    <color name="widget_background">#D0000000</color>
     <color name="widget_table_border">#9B9B9B</color>
     <color name="widget_fat_text">#2196F3</color>
     <color name="widget_green">#70fc70</color>
+    <color name="widget_alert_red">#50FF0000</color>
 </resources>
