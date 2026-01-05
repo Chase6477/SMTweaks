@@ -52,6 +52,8 @@ Sollte es bei dem Update-Vorgang ein Problem geben:
 - Passwort
 - Benutzername
 - Speichern des Stundenplanes der letzten Woche, um ihn in der Nächsten wieder anzuzeigen
+- Ferien und Feiertage als rotes Overlay anzeigen
+- Bundesland angeben für Richtige Ferien und Feiertags Angaben (Daten aus der [mehr-schulferien.de](https://mehr-schulferien.de) Api)
 
 ## Sicherheit
 Für die Sicherheit und den Datenschutz der App wird gesorgt
@@ -61,3 +63,16 @@ Für die Sicherheit und den Datenschutz der App wird gesorgt
     - Wird nur privat zum Anmelden am Schulmanager verwendet
 2. Es werden keine Daten gesammelt
 3. Der einzige Austausch der über das Internet erfolgt, neben der Datenanfrage an Schulmanager, ist eine deaktivierbare App-Update Suche
+
+## QA
+### Android Version
+- Nativ getestet auf
+  - 8.1
+  - 11
+  - 16
+### Launcher
+- Nativ getestet
+  - Samsung OneUI
+  - Moto Launcher
+- Auf Emulator getestet
+  - Pixel Launcher
