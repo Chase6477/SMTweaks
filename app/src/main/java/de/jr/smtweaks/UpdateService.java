@@ -92,7 +92,10 @@ public class UpdateService extends Service {
         if (widgetID == -1)
             stop();
         Context context = this;
-        WidgetProvider.updateButtonText(this, widgetID, getString(R.string.calendar_widget_is_loading));
+        Intent intent = new Intent("de.jr.smtweaks.ACTION_CALENDAR_WIDGET_BUTTON_LOADING");
+        intent.setComponent(new ComponentName(getApplicationContext(), WidgetProvider.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetID);
+        sendBroadcast(intent);
 
         webView.setWebViewClient(new WebViewClient() {
             int timeout = 0;
@@ -126,14 +129,21 @@ public class UpdateService extends Service {
                                         JavaScripts.login + "(\"" + mainPrefs.getString("username", null) + "\", \"" + password + "\")",
                                         login -> {
                                             Handler handler = new Handler(Looper.getMainLooper());
-                                            handler.postDelayed(() -> webView.evaluateJavascript(JavaScripts.outerHtml,
-                                                    loginCheck -> {
 
-                                                        if (Identifier.identify("wrongLogin", loginCheck, "")) {
-                                                            Toast.makeText(context, getString(R.string.wron_login_toast), Toast.LENGTH_LONG).show();
-                                                            stop();
-                                                        }
-                                                    }), 5000);
+                                            handler.postDelayed(() -> {
+                                                if (webView == null)
+                                                    return;
+
+                                                webView.evaluateJavascript(JavaScripts.outerHtml,
+                                                        loginCheck -> {
+
+                                                            if (Identifier.identify("wrongLogin", loginCheck, "")) {
+                                                                Toast.makeText(context, getString(R.string.wron_login_toast), Toast.LENGTH_LONG).show();
+                                                                stop();
+                                                            }
+                                                        });
+                                            }
+                                                    , 5000);
                                         }
                                 );
                             } else if (Identifier.identify("calendarPage", html, url)) {
@@ -216,23 +226,21 @@ public class UpdateService extends Service {
             webView = null;
         }
         mainHandler.removeCallbacks(this::update);
-        WidgetProvider.updateButtonText(this, widgetID, getString(R.string.calendar_table_widget_update));
+        Intent intent = new Intent("de.jr.smtweaks.ACTION_CALENDAR_WIDGET_BUTTON_READY");
+        intent.setComponent(new ComponentName(getApplicationContext(), WidgetProvider.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetID);
+        sendBroadcast(intent);
         stopForeground(true);
         stopSelf();
     }
 
 
     private void updateWidget() {
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-        ComponentName widget = new ComponentName(this, WidgetProvider.class);
-        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(widget);
-
-        Intent intent = new Intent(this, WidgetProvider.class);
-        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
-
+        Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        intent.setComponent(new ComponentName(this, WidgetProvider.class));
         sendBroadcast(intent);
     }
+
 
     private String getMonday() {
         Calendar calendar = Calendar.getInstance();

@@ -42,7 +42,6 @@ public class GsonRepository implements JsonInterface {
             String startDate = jsonObject.get("starts_on").getAsString();
             String endDate = jsonObject.get("ends_on").getAsString();
             items[i] = new HolidayItem(startDate, endDate);
-            System.out.println(items[i].getStartDate() + " - " + items[i].getEndDate());
         }
 
 

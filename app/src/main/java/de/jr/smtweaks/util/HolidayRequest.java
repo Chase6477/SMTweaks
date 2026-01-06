@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Arrays;
 
 import de.jr.smtweaks.widgets.calendar.HolidayItem;
 import okhttp3.Call;
@@ -40,12 +39,12 @@ public class HolidayRequest {
                 if (!response.isSuccessful())
                     return;
                 HolidayItem[] items = new GsonRepository().getCroppedHolidayList(response.body().string());
-               listener.onFinishedHolidayRequest(items);
+                listener.onFinishedHolidayRequest(items);
             }
         });
     }
 
-    public interface OnFinishedHolidayRequest{
+    public interface OnFinishedHolidayRequest {
         void onFinishedHolidayRequest(HolidayItem[] items);
     }
 }

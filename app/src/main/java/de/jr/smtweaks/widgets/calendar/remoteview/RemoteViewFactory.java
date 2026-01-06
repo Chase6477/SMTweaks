@@ -95,8 +95,8 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
                 localDate = day.toInstant()
                         .atZone(ZoneId.systemDefault())
                         .toLocalDate();
-                for (int j = 0; j < holidayItems.length; j++) {
-                    if (holidayItems[j].containsDate(localDate)) {
+                for (HolidayItem holidayItem : holidayItems) {
+                    if (holidayItem.containsDate(localDate)) {
                         rv.setInt(textIdArray[i][3], "setBackgroundColor", ContextCompat.getColor(context, R.color.widget_alert_red));
                         break;
                     }

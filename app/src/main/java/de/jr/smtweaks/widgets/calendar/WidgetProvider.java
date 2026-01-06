@@ -117,6 +117,27 @@ public class WidgetProvider extends AppWidgetProvider {
             ContextCompat.startForegroundService(context, serviceIntent);
             return;
         }
+        if ("de.jr.smtweaks.ACTION_CALENDAR_WIDGET_BUTTON_LOADING".equals(intent.getAction())) {
+            int id = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
+            if (id != -1) {
+                updateButtonText(
+                        context,
+                        id,
+                        context.getString(R.string.calendar_widget_is_loading)
+                );
+            }
+        }
+        if ("de.jr.smtweaks.ACTION_CALENDAR_WIDGET_BUTTON_READY".equals(intent.getAction())) {
+            int id = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
+            if (id != -1) {
+                updateButtonText(
+                        context,
+                        id,
+                        context.getString(R.string.calendar_table_widget_update)
+                );
+            }
+        }
+
 
         if (AppWidgetManager.ACTION_APPWIDGET_UPDATE.equals(intent.getAction())) {
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
