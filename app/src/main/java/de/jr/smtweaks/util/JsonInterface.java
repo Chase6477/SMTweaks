@@ -4,6 +4,10 @@ import de.jr.smtweaks.widgets.calendar.HolidayItem;
 import de.jr.smtweaks.widgets.calendar.TableItem;
 
 public interface JsonInterface {
+
+
+    TableItem[] schulmanagerFormatToTableItemList(String json);
+
     TableItem[] jsonToTableItemList(String json);
 
     String tableItemListToJson(TableItem[] items);
@@ -13,4 +17,8 @@ public interface JsonInterface {
     HolidayItem[] jsonTHolidayItemList(String json);
 
     HolidayItem[] getCroppedHolidayList(String holidays);
+
+    String getToken(String json);
+
+    String getStudent(String json);
 }

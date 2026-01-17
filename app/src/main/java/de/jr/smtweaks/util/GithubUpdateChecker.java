@@ -7,6 +7,10 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.text.Html;
+import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -24,12 +28,21 @@ import okhttp3.Response;
 public class GithubUpdateChecker {
 
     public static void makeAlert(Activity activity, String currentVersion, String latestVersion, OnFinishedUpdateRequest listener) {
+
+        CharSequence message = TextUtils.concat(
+                activity.getString(R.string.update_alert_text), "\n",
+                activity.getString(R.string.update_alert_current_version, currentVersion), "\n",
+                activity.getString(R.string.update_alert_latest_version, latestVersion), "\n",
+                Html.fromHtml(
+                        "<a href=\"https://github.com/Chase6477/SMTweaks/releases/latest\">Github.com - SMTweaks</a>",
+                        Html.FROM_HTML_MODE_LEGACY
+                )
+        );
+
         activity.runOnUiThread(() -> {
-            new AlertDialog.Builder(activity)
+            AlertDialog alertDialog = new AlertDialog.Builder(activity)
                     .setTitle(R.string.update_alert_update_available)
-                    .setMessage(activity.getString(R.string.update_alert_text) + "\n" +
-                            activity.getString(R.string.update_alert_current_version, currentVersion) + "\n" +
-                            activity.getString(R.string.update_alert_latest_version, latestVersion))
+                    .setMessage(message)
 
                     .setPositiveButton(activity.getString(R.string.update_alert_option_show_version), (dialog, which) -> {
                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Chase6477/SMTweaks/releases/latest"));
@@ -43,6 +56,11 @@ public class GithubUpdateChecker {
                     .setNegativeButton(activity.getString(R.string.update_alert_option_later), (dialog, which) ->
                             listener.onFinishedUpdateRequest(true))
                     .show();
+
+            TextView messageView = alertDialog.findViewById(android.R.id.message);
+            if (messageView != null) {
+                messageView.setMovementMethod(LinkMovementMethod.getInstance());
+            }
         });
     }
 

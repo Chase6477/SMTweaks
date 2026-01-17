@@ -118,6 +118,8 @@ public class CryptoUtil {
 
     public static class FileNames {
         public static final String ENC_USER_DATA_FILE_NAME = "userData.enc";
+        public static final String ENC_TOKEN_FILE_NAME = "token.enc";
+        public static final String ENC_STUDENT_FILE_NAME = "student.enc";
         public static final String PLAIN_CALENDAR_TABLE_DATA_FILE_NAME = "calendarTableData.enc";
         public static final String PLAIN_CALENDAR_TABLE_DATA_FILE_NAME_SMALL = "CalendarTableDataSmall.txt";
         public static final String PLAIN_HOLIDAY_DATES_FILE_NAME = "holidayDates.txt";
