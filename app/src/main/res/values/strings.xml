@@ -38,12 +38,15 @@
         <item>Mecklenburg-Vorpommern - MV gibt’s nicht.</item>
         <item>Niedersachsen -- Niedersachsen.Klar.</item>
         <item>Nordrhein-Westfalen -- Europes Heartbeat</item>
-        <item>Rheinland-Pfalz -- heinland-Pfalz.Gold</item>
+        <item>Rheinland-Pfalz -- Rheinland-Pfalz.Gold</item>
         <item>Saarland -- Großes entsteht immer im Kleinen</item>
         <item>Sachsen -- So geht Sächsisch</item>
         <item>Sachsen-Anhalt - #moderndenken</item>
         <item>Schleswig-Holstein -- Der echte Norden</item>
         <item>Thüringen -- Das ist Thüringen</item>
     </string-array>
+    <string name="notification_updating">Fetching Data</string>
+    <string name="activity_welcome_text">You can now add a Widget to your Home Screen!</string>
+    <string name="activity_version_text">Version: %s</string>
 
 </resources>

@@ -5,9 +5,11 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 
 import java.io.IOException;
+import java.util.Calendar;
 
 import javax.crypto.BadPaddingException;
 
+import de.jr.smtweaks.MainActivity;
 import de.jr.smtweaks.util.GsonRepository;
 import de.jr.smtweaks.widgets.calendar.TableItem;
 import okhttp3.Call;
@@ -39,6 +41,8 @@ public class CalendarTable {
                         public void onFinishedUpdateRequest(boolean successful) {
                             if (successful)
                                 getCalendarTable(context, listener, count + 1);
+                            else
+                                listener.onFinishedUpdateRequest(null);
                         }
                     });
                 }
@@ -56,8 +60,25 @@ public class CalendarTable {
         }
     }
 
+    private Calendar getMonday() {
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+        if (day != Calendar.SATURDAY && day != Calendar.SUNDAY) {
+            calendar.add(Calendar.DAY_OF_MONTH, Calendar.MONDAY - day);
+            return calendar;
+        }
+        calendar.add(Calendar.DAY_OF_MONTH, (Calendar.MONDAY - day + 7) % 7);
+        return calendar;
+    }
+
+    private String formatCalendar(Calendar calendar) {
+        return calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH);
+    }
+
     private void fetchData(String token, String student, OnFinishedFetching listener) {
-        RequestBody body = RequestBody.create("{\"bundleVersion\":\"fb091ba7cd\",\"requests\":[{\"moduleName\":\"schedules\",\"endpointName\":\"get-actual-lessons\",\"parameters\":{\"student\":" + student + ",\"start\":\"2026-01-12\",\"end\":\"2026-02-18\"}}]}", MediaType.get("application/json; charset=utf-8"));
+        Calendar sunday = getMonday();
+        sunday.add(Calendar.DAY_OF_WEEK, 7);
+        RequestBody body = RequestBody.create("{\"bundleVersion\":\"fb091ba7cd\",\"requests\":[{\"moduleName\":\"schedules\",\"endpointName\":\"get-actual-lessons\",\"parameters\":{\"student\":" + student + ",\"start\":\"" + formatCalendar(getMonday()) + "\",\"end\":\"" + formatCalendar(sunday) + "\"}}]}", MediaType.get("application/json; charset=utf-8"));
 
         Request request = new Request.Builder()
                 .url("https://login.schulmanager-online.de/api/calls")
@@ -79,7 +100,11 @@ public class CalendarTable {
                     listener.onFinishedFetching(null);
                     return;
                 }
-                listener.onFinishedFetching(new GsonRepository().schulmanagerFormatToTableItemList(responseString));
+                if (MainActivity.DEBUG)
+                    listener.onFinishedFetching(new GsonRepository().jsonToTableItemList(test));
+                else
+                    listener.onFinishedFetching(new GsonRepository().schulmanagerFormatToTableItemList(responseString));
+
             }
         });
     }
@@ -88,8 +113,10 @@ public class CalendarTable {
         void onFinishedUpdateRequest(TableItem[] tableItemList);
     }
 
-
     private interface OnFinishedFetching {
         void onFinishedFetching(TableItem[] tableItemList);
     }
+
+    public final String test2 = "[{\"leftTop\":\"E\",\"rightTopAlternate\":null,\"rightTop\":\"ABC\",\"bottom\":\"1.00\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":1,\"col\":1},{\"leftTop\":\"Ph\",\"rightTopAlternate\":null,\"rightTop\":\"DoM\",\"bottom\":\"1.N1\",\"bottomAlternate\":null,\"isCancelled\":true,\"row\":1,\"col\":2},{\"leftTop\":\"E\",\"rightTopAlternate\":null,\"rightTop\":\"ABC\",\"bottom\":\"1.00\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":2,\"col\":1},{\"leftTop\":\"Ph\",\"rightTopAlternate\":\"EVA\",\"rightTop\":\"DoM\",\"bottom\":\"1.N1\",\"bottomAlternate\":\"2.11\",\"isCancelled\":false,\"row\":2,\"col\":2},{\"leftTop\":\"Geo\",\"rightTopAlternate\":\"EVA\",\"rightTop\":\"GrE\",\"bottom\":\"2.11\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":3,\"col\":1},{\"leftTop\":\"Ku\",\"rightTopAlternate\":null,\"rightTop\":\"ScS\",\"bottom\":\"2.N1\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":3,\"col\":2},{\"leftTop\":\"Geo\",\"rightTopAlternate\":\"EVA\",\"rightTop\":\"GrE\",\"bottom\":\"2.11\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":4,\"col\":1},{\"leftTop\":\"Ku\",\"rightTopAlternate\":null,\"rightTop\":\"ScS\",\"bottom\":\"2.N1\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":4,\"col\":2},{\"leftTop\":\"F\",\"rightTopAlternate\":null,\"rightTop\":\"DeD\",\"bottom\":\"2.N12\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":5,\"col\":1},{\"leftTop\":\"E\",\"rightTopAlternate\":null,\"rightTop\":\"HaR\",\"bottom\":\"2.11\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":5,\"col\":2},{\"leftTop\":\"PuG\",\"rightTopAlternate\":null,\"rightTop\":\"WeS\",\"bottom\":\"2.11\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":6,\"col\":1},{\"leftTop\":\"M\",\"rightTopAlternate\":null,\"rightTop\":\"MüM\",\"bottom\":\"2.11\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":6,\"col\":2},{\"leftTop\":\"M\",\"rightTopAlternate\":null,\"rightTop\":\"MüM\",\"bottom\":\"2.11\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":7,\"col\":2}]\n";
+    public final String test = "[{\"leftTop\":\"E\",\"rightTopAlternate\":null,\"rightTop\":\"JoK\",\"bottom\":\"1.00\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":1,\"col\":1},{\"leftTop\":\"E\",\"rightTopAlternate\":\"GaY\",\"rightTop\":\"JoK\",\"bottom\":\"1.00\",\"bottomAlternate\":\"0.05\",\"isCancelled\":false,\"row\":2,\"col\":1},{\"leftTop\":\"Mu\",\"rightTopAlternate\":null,\"rightTop\":\"ScM\",\"bottom\":\"1.61\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":3,\"col\":1},{\"leftTop\":\"Mu\",\"rightTopAlternate\":null,\"rightTop\":\"ScM\",\"bottom\":\"1.61\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":4,\"col\":1},{\"leftTop\":\"De\",\"rightTopAlternate\":null,\"rightTop\":\"HoD\",\"bottom\":\"-1.01\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":5,\"col\":1},{\"leftTop\":\"De\",\"rightTopAlternate\":null,\"rightTop\":\"HoD\",\"bottom\":\"-1.01\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":6,\"col\":1},{\"leftTop\":\"Inf\",\"rightTopAlternate\":null,\"rightTop\":\"ReJ\",\"bottom\":\"2.05\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":1,\"col\":2},{\"leftTop\":\"Inf\",\"rightTopAlternate\":null,\"rightTop\":\"ReJ\",\"bottom\":\"2.05\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":2,\"col\":2},{\"leftTop\":\"Inf\",\"rightTopAlternate\":null,\"rightTop\":\"ReJ\",\"bottom\":\"2.05\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":3,\"col\":2},{\"leftTop\":\"Ch\",\"rightTopAlternate\":null,\"rightTop\":\"HeS\",\"bottom\":\"1.25\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":4,\"col\":2},{\"leftTop\":\"Ch\",\"rightTopAlternate\":null,\"rightTop\":\"HeS\",\"bottom\":\"1.25\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":5,\"col\":2},{\"leftTop\":\"Sp\",\"rightTopAlternate\":null,\"rightTop\":\"SoL\",\"bottom\":\"TH1\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":6,\"col\":2},{\"leftTop\":\"Sp\",\"rightTopAlternate\":null,\"rightTop\":\"SoL\",\"bottom\":\"TH1\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":7,\"col\":2},{\"leftTop\":\"Wr\",\"rightTopAlternate\":null,\"rightTop\":\"DeM\",\"bottom\":\"1.47\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":1,\"col\":3},{\"leftTop\":\"Wr\",\"rightTopAlternate\":null,\"rightTop\":\"DeM\",\"bottom\":\"1.47\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":2,\"col\":3},{\"leftTop\":\"Rk\",\"rightTopAlternate\":null,\"rightTop\":\"KaJ\",\"bottom\":\"2.71\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":3,\"col\":3},{\"leftTop\":\"Rk\",\"rightTopAlternate\":null,\"rightTop\":\"KaJ\",\"bottom\":\"2.71\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":4,\"col\":3},{\"leftTop\":\"Bio\",\"rightTopAlternate\":\"HeS\",\"rightTop\":\"null\",\"bottom\":\"1.11\",\"bottomAlternate\":\"1.11\",\"isCancelled\":false,\"row\":5,\"col\":3},{\"leftTop\":\"Bio\",\"rightTopAlternate\":\"Hes\",\"rightTop\":\"null\",\"bottom\":\"1.11\",\"bottomAlternate\":\"2.22\",\"isCancelled\":false,\"row\":6,\"col\":3},{\"leftTop\":\"FaQ\",\"rightTopAlternate\":null,\"rightTop\":\"EdD\",\"bottom\":\"Atrium\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":8,\"col\":3},{\"leftTop\":\"Fr\",\"rightTopAlternate\":null,\"rightTop\":\"HoD\",\"bottom\":\"0.67\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":2,\"col\":4},{\"leftTop\":\"Fr\",\"rightTopAlternate\":null,\"rightTop\":\"HoD\",\"bottom\":\"0.67\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":3,\"col\":4},{\"leftTop\":\"Geo\",\"rightTopAlternate\":null,\"rightTop\":\"ZwM\",\"bottom\":\"R.34\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":4,\"col\":4},{\"leftTop\":\"Geo\",\"rightTopAlternate\":null,\"rightTop\":\"ZwM\",\"bottom\":\"R.34\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":5,\"col\":4},{\"leftTop\":\"Ku\",\"rightTopAlternate\":null,\"rightTop\":\"ReM\",\"bottom\":\"2.14\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":1,\"col\":5},{\"leftTop\":\"Ku\",\"rightTopAlternate\":null,\"rightTop\":\"ReM\",\"bottom\":\"2.14\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":2,\"col\":5},{\"leftTop\":\"G\",\"rightTopAlternate\":null,\"rightTop\":\"DeM\",\"bottom\":\"1.12\",\"bottomAlternate\":null,\"isCancelled\":true,\"row\":3,\"col\":5},{\"leftTop\":\"G\",\"rightTopAlternate\":null,\"rightTop\":\"DeM\",\"bottom\":\"1.12\",\"bottomAlternate\":null,\"isCancelled\":true,\"row\":4,\"col\":5},{\"leftTop\":\"Ma\",\"rightTopAlternate\":null,\"rightTop\":\"ReJ\",\"bottom\":\"2.09\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":7,\"col\":5},{\"leftTop\":\"Ma\",\"rightTopAlternate\":null,\"rightTop\":\"ReJ\",\"bottom\":\"2.09\",\"bottomAlternate\":null,\"isCancelled\":false,\"row\":8,\"col\":5}]";
 }

@@ -34,19 +34,24 @@ public class GsonRepository implements JsonInterface {
             String bottomAlternate = null;
             boolean isCancelled = false;
 
-//            Es muss auf Ausfallende Stunde muss gewartet werden!
-//
-//            if (object.has("isSubstitution")) {
-//                isCancelled = object.getAsJsonPrimitive("isSubstitution").getAsBoolean();
-//            }
+            row = object.getAsJsonObject("classHour").getAsJsonPrimitive("number").getAsInt();
+            col = LocalDate.parse(object.getAsJsonPrimitive("date").getAsString()).getDayOfWeek().getValue();
+
+            if (object.has("isCancelled")) {
+                isCancelled = object.getAsJsonPrimitive("isCancelled").getAsBoolean();
+            }
 
             if (object.has("originalLessons")) {
                 JsonObject originalLesson = object.getAsJsonArray("originalLessons").get(0).getAsJsonObject();
                 rightTop = originalLesson.getAsJsonArray("teachers").get(0).getAsJsonObject().getAsJsonPrimitive("abbreviation").getAsString();
                 bottom = originalLesson.getAsJsonObject("room").getAsJsonObject().getAsJsonPrimitive("name").getAsString();
+                if (isCancelled) {
+                    leftTop = originalLesson.getAsJsonPrimitive("subjectLabel").getAsString();
+                    tableItemList.add(new TableItem(leftTop, rightTop, rightTopAlternate, bottom, bottomAlternate, isCancelled, row, col));
+                }
             }
 
-            if (object.has("actualLesson")) {
+            if (object.has("actualLesson") && !isCancelled) {
                 JsonObject actualLesson = object.getAsJsonObject("actualLesson");
                 leftTop = actualLesson.getAsJsonPrimitive("subjectLabel").getAsString();
                 row = object.getAsJsonObject("classHour").getAsJsonPrimitive("number").getAsInt();

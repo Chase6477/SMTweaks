@@ -10,7 +10,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ServiceInfo;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -106,6 +108,9 @@ public class UpdateService extends Service {
         intent.setComponent(new ComponentName(getApplicationContext(), WidgetProvider.class));
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetID);
         sendBroadcast(intent);
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            sendBroadcast(intent);
+        }, 1000);
         stopForeground(true);
         updateWidget();
         stopSelf();
@@ -154,14 +159,18 @@ public class UpdateService extends Service {
         NotificationChannel channel =
                 new NotificationChannel(
                         channelId,
-                        "DOM Service",
-                        NotificationManager.IMPORTANCE_HIGH
+                        "Update Service",
+                        NotificationManager.IMPORTANCE_MIN
                 );
+        channel.setSound(null, null);
+        channel.enableVibration(false);
+        channel.setShowBadge(false);
+
         getSystemService(NotificationManager.class)
                 .createNotificationChannel(channel);
 
         return new NotificationCompat.Builder(this, channelId)
-                .setContentTitle("Updating data")
+                .setContentTitle(getString(R.string.notification_updating))
                 .setSmallIcon(R.drawable.smt)
                 .setOngoing(true)
                 .build();

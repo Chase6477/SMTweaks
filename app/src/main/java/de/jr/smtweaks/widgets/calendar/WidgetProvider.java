@@ -19,6 +19,7 @@ import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 
+import de.jr.smtweaks.MainActivity;
 import de.jr.smtweaks.R;
 import de.jr.smtweaks.UpdateService;
 import de.jr.smtweaks.util.CryptoUtil;
@@ -91,6 +92,10 @@ public class WidgetProvider extends AppWidgetProvider {
             views.setTextViewTextSize(headerIDs[dayOfWeek], TypedValue.COMPLEX_UNIT_SP, 16);
         }
         File file = new File(context.getFilesDir(), CryptoUtil.FileNames.PLAIN_CALENDAR_TABLE_DATA_FILE_NAME);
+        if (MainActivity.DEBUG) {
+            views.setTextViewText(R.id.calendar_widget_last_update, context.getString(R.string.calendar_table_widget_last_update, "1.1.1970 00:00"));
+            return;
+        }
         if (!file.exists())
             views.setTextViewText(R.id.calendar_widget_last_update, context.getString(R.string.calendar_table_widget_last_update, context.getString(R.string.calendar_table_widget_last_update_never)));
         else {

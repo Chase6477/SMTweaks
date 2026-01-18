@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Calendar;
 
+import de.jr.smtweaks.MainActivity;
 import de.jr.smtweaks.R;
 import de.jr.smtweaks.util.CryptoUtil;
 import de.jr.smtweaks.util.GsonRepository;
@@ -96,7 +97,7 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
                         .atZone(ZoneId.systemDefault())
                         .toLocalDate();
                 for (HolidayItem holidayItem : holidayItems) {
-                    if (holidayItem.containsDate(localDate)) {
+                    if (holidayItem.containsDate(localDate) || (i == 1 && MainActivity.DEBUG)) {
                         rv.setInt(textIdArray[i][3], "setBackgroundColor", ContextCompat.getColor(context, R.color.widget_alert_red));
                         break;
                     }
@@ -111,13 +112,13 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
                 int[] text = textIdArray[item.getCol() - 1];
                 setText(rv, text[0], item.getLeftTop(), defaultColor);
 
-                if (item.getRightTopAlternate() != null) {
+                if (item.getRightTopAlternate() != null && !item.getRightTopAlternate().equals(item.getRightTop())) {
                     setText(rv, text[1], item.getRightTopAlternate(), greenColor);
                 } else {
                     setText(rv, text[1], item.getRightTop(), defaultColor);
                 }
 
-                if (item.getBottomAlternate() != null) {
+                if (item.getBottomAlternate() != null && !item.getBottomAlternate().equals(item.getBottom())) {
                     setText(rv, text[2], item.getBottomAlternate(), greenColor);
                 } else {
                     setText(rv, text[2], item.getBottom(), defaultColor);
