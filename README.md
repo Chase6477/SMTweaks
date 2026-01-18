@@ -1,8 +1,7 @@
 # SM Tweaks
- Widgets für https://schulmanager-online.de
- 
-<img width="40%" height="auto" alt="image" src="https://github.com/user-attachments/assets/836da2f1-ad03-473b-b7fa-287bf82bf8c6" />
+Widgets für https://schulmanager-online.de
 
+<img width="40%" height="auto" alt="Calendar Widget" src="https://github.com/user-attachments/assets/ca90bd6d-e0f2-4d51-a654-eede4870b1a4" />
 
 ## Vorab
 Die Angabe von einem korrekten Schulmanager Passwort und Nutzernamen ist für die App erforderlich!
@@ -45,8 +44,7 @@ Sollte es bei dem Update-Vorgang ein Problem geben:
 
 ## Stundenplan
 
-<img width="20%" height="auto" alt="Widget im Darkmode" src="https://github.com/user-attachments/assets/64e20f16-ad5a-4984-bbe2-1b9cae15cc84" />
-<img width="20%" height="auto" alt="Widget im Lightmode" src="https://github.com/user-attachments/assets/39e1bc2b-7efc-4b96-a98a-ae46aa7a90d0" />
+<img width="40%" height="auto" alt="Calendar Widget" src="https://github.com/user-attachments/assets/ca90bd6d-e0f2-4d51-a654-eede4870b1a4" />
 
 #### Einstellungen
 - Passwort
@@ -54,6 +52,15 @@ Sollte es bei dem Update-Vorgang ein Problem geben:
 - Speichern des Stundenplanes der letzten Woche, um ihn in der Nächsten wieder anzuzeigen
 - Ferien und Feiertage als rotes Overlay anzeigen
 - Bundesland angeben für Richtige Ferien und Feiertags Angaben (Daten aus der [mehr-schulferien.de](https://mehr-schulferien.de) Api)
+
+
+## Legende
+|Format|Bedeutung|Referenz|
+|-|-|-|
+|Grüne Schriftfarbe|Vertretungs- Lehrer/Raum|Siehe Montag, Stunde 2|
+|Rot Durchgestrichen|Stunde fällt komplett aus|Siehe Freitag, Stunde 3 & 4|
+|Rot Hinterlegt|Ferien/Feiertag|Siehe Dienstag, ganzer Tag|
+
 
 ## Sicherheit
 Für die Sicherheit und den Datenschutz der App wird gesorgt
@@ -64,7 +71,7 @@ Für die Sicherheit und den Datenschutz der App wird gesorgt
 2. Es werden keine Daten gesammelt
 3. Der einzige Austausch der über das Internet erfolgt, neben der Datenanfrage an Schulmanager, ist eine deaktivierbare App-Update Suche
 
-## QA
+## QnA
 ### Android Version
 - Nativ getestet auf
   - 8.1
@@ -76,3 +83,17 @@ Für die Sicherheit und den Datenschutz der App wird gesorgt
   - Moto Launcher
 - Auf Emulator getestet
   - Pixel Launcher
+### Aktualisierungsdauer
+Bei gutem/normalem Internet ca. 1 Sekunde
+
+Bei schlechtem Internet ca. 10-20 Sekunden
+
+## Zukunftspläne
+- 2FA Unterstützung
+  - Der Code ist da, aber hatte noch keine Lust ihn zu implementieren
+- Nachträgliche veränderung der Einstellungen
+  - Ist nicht wirklich kompliziert, aber ich weiß nicht was eine elegante Lösung dafür wäre so dass es nicht ausversehen aktiviert wird
+- Automatisches fetching
+  - Da momentan keine Einstellungen nachträglich verändert werden können bin ich mir unsicher wo es hin sollte. Außerdem muss ich auch auf den Akkuverbrauch davon achten...
+- Weitere Widgets
+  - An sich kein Problem, ich habe aber persöhnlich grade keinen Grund oder Lust welche zu erstellen
