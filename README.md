@@ -97,3 +97,5 @@ Bei schlechtem Internet ca. 10-20 Sekunden
   - Da momentan keine Einstellungen nachträglich verändert werden können bin ich mir unsicher wo es hin sollte. Außerdem muss ich auch auf den Akkuverbrauch davon achten...
 - Weitere Widgets
   - An sich kein Problem, ich habe aber persöhnlich grade keinen Grund oder Lust welche zu erstellen
+- Bug fixxen der bei jeder Aktualisierung das Widget 4 mal blinken lässt (nur auf manchen Launchern, fsr auf dem neuesten von Samsung, aber nicht auf älteren Versionen)
+  - weil für die 2 Button states, ein Failsave und einfach noch so ein Update Event ausgeführt wird, die ich aber alle nicht problemlos rausnehmen kann
