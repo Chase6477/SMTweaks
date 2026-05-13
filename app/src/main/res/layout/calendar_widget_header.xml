@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    tools:ignore="ContentDescription"
     android:orientation="vertical">
 
     <ImageView
@@ -26,22 +28,22 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:paddingHorizontal="16dp"
-            android:text="0"
+            android:minEms="2"
+            android:paddingHorizontal="8dp"
             android:textColor="@color/widget_default_text"
             android:visibility="invisible" />
-
-        <ImageView
-            android:id="@+id/imageView11"
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/widget_table_border" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imh1"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/widget_table_border" />
 
             <TextView
                 android:id="@+id/header1"
@@ -50,12 +52,11 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingBottom="4dp"
-                android:text="@string/day_monday"
                 android:textColor="@color/widget_default_text"
                 android:textSize="14sp" />
 
             <ImageView
-                android:id="@+id/imageView13"
+                android:id="@+id/imh2"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:background="@color/widget_table_border" />
@@ -67,11 +68,10 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingBottom="4dp"
-                android:text="@string/day_tuesday"
                 android:textColor="@color/widget_default_text" />
 
             <ImageView
-                android:id="@+id/imageView14"
+                android:id="@+id/imh3"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:background="@color/widget_table_border" />
@@ -83,11 +83,10 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingBottom="4dp"
-                android:text="@string/day_wednesday"
                 android:textColor="@color/widget_default_text" />
 
             <ImageView
-                android:id="@+id/imageView15"
+                android:id="@+id/imh4"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:background="@color/widget_table_border" />
@@ -99,11 +98,10 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingBottom="4dp"
-                android:text="@string/day_thursday"
                 android:textColor="@color/widget_default_text" />
 
             <ImageView
-                android:id="@+id/imageView16"
+                android:id="@+id/imh5"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:background="@color/widget_table_border" />
@@ -115,7 +113,36 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal|center_vertical"
                 android:paddingBottom="4dp"
-                android:text="@string/day_friday"
+                android:textColor="@color/widget_default_text" />
+
+            <ImageView
+                android:id="@+id/imh6"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/widget_table_border" />
+
+            <TextView
+                android:id="@+id/header6"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingBottom="4dp"
+                android:textColor="@color/widget_default_text" />
+
+            <ImageView
+                android:id="@+id/imh7"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/widget_table_border" />
+
+            <TextView
+                android:id="@+id/header7"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingBottom="4dp"
                 android:textColor="@color/widget_default_text" />
 
             <ImageView

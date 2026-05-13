@@ -20,7 +20,9 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:paddingHorizontal="16dp"
+            android:minEms="2"
+            android:paddingHorizontal="8dp"
+            android:textAlignment="center"
             android:textColor="@color/widget_default_text" />
 
         <LinearLayout
@@ -29,13 +31,13 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/im1"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:background="@color/widget_table_border" />
 
             <LinearLayout
-                android:id="@+id/bg51"
+                android:id="@+id/bg1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -49,14 +51,14 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/t5l1"
+                        android:id="@+id/tl1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textColor="@color/widget_default_text" />
 
                     <TextView
-                        android:id="@+id/t5r1"
+                        android:id="@+id/tr1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
 
@@ -65,7 +67,7 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/t5b1"
+                    android:id="@+id/tb1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
@@ -75,13 +77,13 @@
             </LinearLayout>
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/im2"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:background="@color/widget_table_border" />
 
             <LinearLayout
-                android:id="@+id/bg52"
+                android:id="@+id/bg2"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -95,14 +97,14 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/t5l2"
+                        android:id="@+id/tl2"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textColor="@color/widget_default_text" />
 
                     <TextView
-                        android:id="@+id/t5r2"
+                        android:id="@+id/tr2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
 
@@ -111,7 +113,7 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/t5b2"
+                    android:id="@+id/tb2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
@@ -121,13 +123,13 @@
             </LinearLayout>
 
             <ImageView
-                android:id="@+id/imageView3"
+                android:id="@+id/im3"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:background="@color/widget_table_border" />
 
             <LinearLayout
-                android:id="@+id/bg53"
+                android:id="@+id/bg3"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -141,14 +143,14 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/t5l3"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tl3"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textColor="@color/widget_default_text" />
 
                     <TextView
-                        android:id="@+id/t5r3"
+                        android:id="@+id/tr3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
 
@@ -157,7 +159,7 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/t5b3"
+                    android:id="@+id/tb3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
@@ -167,13 +169,13 @@
             </LinearLayout>
 
             <ImageView
-                android:id="@+id/imageView4"
+                android:id="@+id/im4"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:background="@color/widget_table_border" />
 
             <LinearLayout
-                android:id="@+id/bg54"
+                android:id="@+id/bg4"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -187,14 +189,14 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/t5l4"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tl4"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textColor="@color/widget_default_text" />
 
                     <TextView
-                        android:id="@+id/t5r4"
+                        android:id="@+id/tr4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
 
@@ -203,7 +205,7 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/t5b4"
+                    android:id="@+id/tb4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
@@ -213,13 +215,13 @@
             </LinearLayout>
 
             <ImageView
-                android:id="@+id/imageView5"
+                android:id="@+id/im5"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:background="@color/widget_table_border" />
 
             <LinearLayout
-                android:id="@+id/bg55"
+                android:id="@+id/bg5"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -233,14 +235,14 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/t5l5"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tl5"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textColor="@color/widget_default_text" />
 
                     <TextView
-                        android:id="@+id/t5r5"
+                        android:id="@+id/tr5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
 
@@ -249,7 +251,101 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/t5b5"
+                    android:id="@+id/tb5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:textAlignment="center"
+                    android:textColor="@color/widget_default_text" />
+
+            </LinearLayout>
+
+
+            <ImageView
+                android:id="@+id/im6"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/widget_table_border" />
+
+            <LinearLayout
+                android:id="@+id/bg6"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingHorizontal="4dp"
+                android:paddingVertical="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tl6"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/widget_default_text" />
+
+                    <TextView
+                        android:id="@+id/tr6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:textAlignment="center"
+                        android:textColor="@color/widget_default_text" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tb6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:textAlignment="center"
+                    android:textColor="@color/widget_default_text" />
+
+            </LinearLayout>
+
+
+            <ImageView
+                android:id="@+id/im7"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/widget_table_border" />
+
+            <LinearLayout
+                android:id="@+id/bg7"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingHorizontal="4dp"
+                android:paddingVertical="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tl7"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/widget_default_text" />
+
+                    <TextView
+                        android:id="@+id/tr7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:textAlignment="center"
+                        android:textColor="@color/widget_default_text" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tb7"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 

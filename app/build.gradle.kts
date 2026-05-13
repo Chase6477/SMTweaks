@@ -10,8 +10,8 @@ android {
         applicationId = "de.jr.smtweaks"
         minSdk = 26
         targetSdk = 36
-        versionCode = 10
-        versionName = "1.4.0"
+        versionCode = 13
+        versionName = "1.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -36,8 +36,17 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.commons.codec)
 
+    implementation(libs.camera.core)
+    implementation(libs.camera.camera2)
+    implementation(libs.camera.lifecycle)
+    implementation(libs.camera.view)
+    implementation(libs.core)
+
+
     implementation(libs.okhttp)
 
     implementation(libs.appcompat)
     implementation(libs.material)
+    implementation(libs.preference)
+    implementation(libs.constraintlayout)
 }

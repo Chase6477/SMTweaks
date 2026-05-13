@@ -10,6 +10,8 @@ import java.util.Calendar;
 import javax.crypto.BadPaddingException;
 
 import de.jr.smtweaks.MainActivity;
+import de.jr.smtweaks.UserData;
+import de.jr.smtweaks.util.CryptoUtil;
 import de.jr.smtweaks.util.GsonRepository;
 import de.jr.smtweaks.widgets.calendar.TableItem;
 import okhttp3.Call;
@@ -29,33 +31,27 @@ public class CalendarTable {
         if (count >= MAX_LOGIN_TRIES_COUNT)
             listener.onFinishedUpdateRequest(null);
         try {
-            fetchData(Login.getToken(context), Login.getStudent(context), new OnFinishedFetching() {
-                @Override
-                public void onFinishedFetching(TableItem[] tableItemList) {
-                    if (tableItemList != null) {
-                        listener.onFinishedUpdateRequest(tableItemList);
-                        return;
-                    }
-                    Login.login(context, new Login.OnFinishedUpdateRequest() {
-                        @Override
-                        public void onFinishedUpdateRequest(boolean successful) {
-                            if (successful)
-                                getCalendarTable(context, listener, count + 1);
-                            else
-                                listener.onFinishedUpdateRequest(null);
-                        }
-                    });
+            UserData userData = CryptoUtil.getUserData(context);
+            if (userData == null)
+                return;
+            fetchData(Login.getToken(context), userData.getUserString(), tableItemList -> {
+                if (tableItemList != null) {
+                    listener.onFinishedUpdateRequest(tableItemList);
+                    return;
                 }
-            });
-        } catch (IOException | BadPaddingException e) {
-            Login.login(context, new Login.OnFinishedUpdateRequest() {
-                @Override
-                public void onFinishedUpdateRequest(boolean successful) {
+                Login.login(context, successful -> {
                     if (successful)
                         getCalendarTable(context, listener, count + 1);
                     else
                         listener.onFinishedUpdateRequest(null);
-                }
+                });
+            });
+        } catch (IOException | BadPaddingException e) {
+            Login.login(context, successful -> {
+                if (successful)
+                    getCalendarTable(context, listener, count + 1);
+                else
+                    listener.onFinishedUpdateRequest(null);
             });
         }
     }

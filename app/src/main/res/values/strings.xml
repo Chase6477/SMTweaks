@@ -9,11 +9,6 @@
     <string name="calendar_widget_configuration_password">Password:</string>
     <string name="calendar_widget_configuration_show_last_week_switch">Show last week</string>
     <string name="calendar_table_widget_update">Update</string>
-    <string name="day_monday">Mo</string>
-    <string name="day_tuesday">Tu</string>
-    <string name="day_wednesday">We</string>
-    <string name="day_thursday">Th</string>
-    <string name="day_friday">Fr</string>
     <string name="calendar_widget_configuration_apply">Apply</string>
     <string name="calendar_widget_preference" translatable="false">calendar_widget_%d</string>
     <string name="update_alert_update_available">App update available</string>
@@ -27,26 +22,49 @@
     <string name="calendar_widget_is_loading">Loading…</string>
     <string name="calendar_widget_configuration_state">State</string>
     <string name="calendar_config_show_holidays">Show Holidays</string>
-    <string-array name="states" translatable="false">
-        <item>Baden-Württemberg -- The Länd</item>
-        <item>Bayern</item>
-        <item>Berlin -- Wir sind ein Berlin</item>
-        <item>Brandenburg -- Es kann so einfach sein</item>
-        <item>Bremen -- Bremen erleben</item>
-        <item>Hamburg</item>
-        <item>Hessen -- An Hessen führt kein Weg vorbei</item>
-        <item>Mecklenburg-Vorpommern - MV gibt’s nicht.</item>
-        <item>Niedersachsen -- Niedersachsen.Klar.</item>
-        <item>Nordrhein-Westfalen -- Europes Heartbeat</item>
-        <item>Rheinland-Pfalz -- Rheinland-Pfalz.Gold</item>
-        <item>Saarland -- Großes entsteht immer im Kleinen</item>
-        <item>Sachsen -- So geht Sächsisch</item>
-        <item>Sachsen-Anhalt - #moderndenken</item>
-        <item>Schleswig-Holstein -- Der echte Norden</item>
-        <item>Thüringen -- Das ist Thüringen</item>
+    <string-array name="updateInterval">
+        <item>30 minutes</item>
+        <item>45 minutes</item>
+        <item>1 hour</item>
+        <item>2 hours</item>
+        <item>4 hours</item>
+        <item>6 hours</item>
+        <item>12 hours</item>
+        <item>1 day</item>
+        <item>2 days</item>
+        <item>4 days</item>
+        <item>1 week</item>
+    </string-array>
+    <integer-array name="updateIntervalSeconds" translatable="false">
+        <item>1800000</item>
+        <item>2700000</item>
+        <item>3600000</item>
+        <item>7200000</item>
+        <item>14400000</item>
+        <item>21600000</item>
+        <item>43200000</item>
+        <item>86400000</item>
+        <item>172800000</item>
+        <item>345600000</item>
+        <item>604800000</item>
+    </integer-array>
+    <string-array name="weekDay">
+        <item>Mo</item>
+        <item>Tu</item>
+        <item>We</item>
+        <item>Th</item>
+        <item>Fr</item>
+        <item>Sa</item>
+        <item>Su</item>
     </string-array>
     <string name="notification_updating">Fetching Data</string>
     <string name="activity_welcome_text">You can now add a Widget to your Home Screen!</string>
     <string name="activity_version_text">Version: %s</string>
+
+    <!-- Preference Titles -->
+
+    <!-- Messages Preferences -->
+
+    <!-- Sync Preferences -->
 
 </resources>

@@ -5,6 +5,8 @@ import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,8 +21,10 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 
+import de.jr.smtweaks.UserData;
+
 /**
- * This Util class is from one of my other work-in-progress apps (hopefully cuming soon)
+ * This Util class is from one of my other work-in-progress apps (hopefully coming soon)
  */
 
 public class CryptoUtil {
@@ -52,6 +56,8 @@ public class CryptoUtil {
         try {
             Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
             byte[] fileBytes = readFile(new File(fileContext.getFilesDir(), fileName));
+            if (fileBytes == null)
+                return null;
             GCMParameterSpec spec = new GCMParameterSpec(GCM_TAG_SIZE, Arrays.copyOfRange(fileBytes, 0, GCM_IV_SIZE));
             cipher.init(Cipher.DECRYPT_MODE, key, spec);
             return cipher.doFinal(Arrays.copyOfRange(fileBytes, GCM_IV_SIZE, fileBytes.length));
@@ -67,6 +73,9 @@ public class CryptoUtil {
     }
 
     public static byte[] readFile(File file) throws IOException {
+        if (!file.exists()) {
+            return null;
+        }
         try (FileInputStream fis = new FileInputStream(file)) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             byte[] buffer = new byte[BUFFER_SIZE];
@@ -76,6 +85,9 @@ public class CryptoUtil {
                 baos.write(buffer, 0, bytesRead);
             }
             return baos.toByteArray();
+        } catch (Exception e) {
+            Log.e("READ", "Read Error", e);
+            return null;
         }
     }
 
@@ -116,12 +128,33 @@ public class CryptoUtil {
                 .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE);
     }
 
+    @Nullable
+    public static UserData getUserData(Context context) {
+        try {
+            return new GsonRepository().jsonToUserData(CryptoUtil.decrypt(
+                    CryptoUtil.getKeyStoreSecretKey("UserData"),
+                    context,
+                    FileNames.ENC_USER_DATA_FILE_NAME)
+            );
+        } catch (BadPaddingException e) {
+            Log.e("Decrypt", "Decrypting UserData.enc failed, wrong key", e);
+            return null;
+        }
+    }
+
+    public static void setUserData(Context context, UserData userData) {
+        CryptoUtil.encrypt(
+                new GsonRepository().userDataToJson(userData),
+                CryptoUtil.getKeyStoreSecretKey("UserData"),
+                context,
+                FileNames.ENC_USER_DATA_FILE_NAME
+        );
+    }
+
     public static class FileNames {
-        public static final String ENC_USER_DATA_FILE_NAME = "userData.enc";
+        public static final String ENC_USER_DATA_FILE_NAME = "UserData.enc";
         public static final String ENC_TOKEN_FILE_NAME = "token.enc";
-        public static final String ENC_STUDENT_FILE_NAME = "student.enc";
-        public static final String PLAIN_CALENDAR_TABLE_DATA_FILE_NAME = "calendarTableData.enc";
+        public static final String PLAIN_CALENDAR_TABLE_DATA_FILE_NAME = "CalendarTableData.txt";
         public static final String PLAIN_CALENDAR_TABLE_DATA_FILE_NAME_SMALL = "CalendarTableDataSmall.txt";
-        public static final String PLAIN_HOLIDAY_DATES_FILE_NAME = "holidayDates.txt";
     }
 }

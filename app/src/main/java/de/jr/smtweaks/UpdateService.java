@@ -29,8 +29,6 @@ import de.jr.smtweaks.schulmanagerAPI.CalendarTable;
 import de.jr.smtweaks.util.CryptoUtil;
 import de.jr.smtweaks.util.GithubUpdateChecker;
 import de.jr.smtweaks.util.GsonRepository;
-import de.jr.smtweaks.util.HolidayRequest;
-import de.jr.smtweaks.widgets.calendar.HolidayItem;
 import de.jr.smtweaks.widgets.calendar.TableItem;
 import de.jr.smtweaks.widgets.calendar.WidgetProvider;
 
@@ -44,26 +42,13 @@ public class UpdateService extends Service {
         if (this.intent != null)
             return START_NOT_STICKY;
         this.intent = intent;
+
         if (Build.VERSION.SDK_INT > 28)
             startForeground(1, createNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC);
         else
             startForeground(1, createNotification());
 
         widgetID = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
-        HolidayRequest.getHolidays(this, new HolidayRequest.OnFinishedHolidayRequest() {
-            @Override
-            public void onFinishedHolidayRequest(HolidayItem[] items) {
-                if (items == null) {
-                    return;
-                }
-                try {
-                    CryptoUtil.writeFile(
-                            new File(getFilesDir(), CryptoUtil.FileNames.PLAIN_HOLIDAY_DATES_FILE_NAME),
-                            new GsonRepository().holidayItemListToJson(items).getBytes(StandardCharsets.UTF_8));
-                } catch (IOException ignore) {
-                }
-            }
-        });
 
         GithubUpdateChecker.checkForUpdate(this);
 
@@ -76,23 +61,19 @@ public class UpdateService extends Service {
         if (widgetID == -1)
             stop();
 
-        new CalendarTable().getCalendarTable(this, new CalendarTable.OnFinishedUpdateRequest() {
-
-            @Override
-            public void onFinishedUpdateRequest(TableItem[] tableItemList) {
-                if (tableItemList == null) {
-                    stop();
-                    return;
-                }
-                try {
-                    TableItem[] merged = getFullWeekTableItems(tableItemList);
-                    CryptoUtil.writeFile(new File(context.getFilesDir(), CryptoUtil.FileNames.PLAIN_CALENDAR_TABLE_DATA_FILE_NAME), new GsonRepository().tableItemListToJson(merged).getBytes(StandardCharsets.UTF_8));
-                    CryptoUtil.writeFile(new File(context.getFilesDir(), CryptoUtil.FileNames.PLAIN_CALENDAR_TABLE_DATA_FILE_NAME_SMALL), new GsonRepository().tableItemListToJson(tableItemList).getBytes(StandardCharsets.UTF_8));
-                } catch (IOException e) {
-                    Log.e("File", "Could not write files", e);
-                }
+        new CalendarTable().getCalendarTable(this, tableItemList -> {
+            if (tableItemList == null) {
                 stop();
+                return;
             }
+            try {
+                TableItem[] merged = getFullWeekTableItems(tableItemList);
+                CryptoUtil.writeFile(new File(context.getFilesDir(), CryptoUtil.FileNames.PLAIN_CALENDAR_TABLE_DATA_FILE_NAME), new GsonRepository().tableItemListToJson(merged).getBytes(StandardCharsets.UTF_8));
+                CryptoUtil.writeFile(new File(context.getFilesDir(), CryptoUtil.FileNames.PLAIN_CALENDAR_TABLE_DATA_FILE_NAME_SMALL), new GsonRepository().tableItemListToJson(tableItemList).getBytes(StandardCharsets.UTF_8));
+            } catch (IOException e) {
+                Log.e("File", "Could not write files", e);
+            }
+            stop();
         }, 0);
         return START_NOT_STICKY;
     }
@@ -108,9 +89,7 @@ public class UpdateService extends Service {
         intent.setComponent(new ComponentName(getApplicationContext(), WidgetProvider.class));
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetID);
         sendBroadcast(intent);
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            sendBroadcast(intent);
-        }, 1000);
+        new Handler(Looper.getMainLooper()).postDelayed(() -> sendBroadcast(intent), 1000);
         stopForeground(true);
         updateWidget();
         stopSelf();

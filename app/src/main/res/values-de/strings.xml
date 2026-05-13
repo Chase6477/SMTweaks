@@ -10,11 +10,6 @@
     <string name="calendar_widget_configuration_password">Passwort:</string>
     <string name="calendar_widget_configuration_show_last_week_switch">Letzte Woche anzeigen</string>
     <string name="calendar_table_widget_update">Update</string>
-    <string name="day_monday">Mo</string>
-    <string name="day_tuesday">Di</string>
-    <string name="day_wednesday">Mi</string>
-    <string name="day_thursday">Do</string>
-    <string name="day_friday">Fr</string>
     <string name="calendar_widget_configuration_apply">Anwenden</string>
     <string name="update_alert_update_available">App Update verfügbar</string>
     <string name="update_alert_text">Eine neue Version für SMTweaks wurde veröffentlicht!</string>
@@ -30,4 +25,26 @@
     <string name="notification_updating">Daten abrufen</string>
     <string name="activity_welcome_text">Du kannst jetzt ein Widget auf deinem Startbildschirm Hinzufügen!</string>
     <string name="activity_version_text">Version: %s</string>
+    <string-array name="updateInterval">
+        <item>30 Minuten</item>
+        <item>45 Minuten</item>
+        <item>1 Stunde</item>
+        <item>2 Stunden</item>
+        <item>4 Stunden</item>
+        <item>6 Stunden</item>
+        <item>12 Stunden</item>
+        <item>1 Tag</item>
+        <item>2 Tage</item>
+        <item>4 Tage</item>
+        <item>1 Woche</item>
+    </string-array>
+    <string-array name="weekDay">
+        <item>Mo</item>
+        <item>Di</item>
+        <item>Mi</item>
+        <item>Do</item>
+        <item>Fr</item>
+        <item>Sa</item>
+        <item>So</item>
+    </string-array>
 </resources>

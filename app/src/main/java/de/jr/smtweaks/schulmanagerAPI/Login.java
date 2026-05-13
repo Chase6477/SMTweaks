@@ -1,7 +1,6 @@
 package de.jr.smtweaks.schulmanagerAPI;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 
@@ -11,6 +10,8 @@ import java.nio.charset.StandardCharsets;
 
 import javax.crypto.BadPaddingException;
 
+import de.jr.smtweaks.UserData;
+import de.jr.smtweaks.qrCodeScanner.TwoFAConfig;
 import de.jr.smtweaks.util.CryptoUtil;
 import de.jr.smtweaks.util.GsonRepository;
 import okhttp3.Call;
@@ -23,35 +24,28 @@ import okhttp3.Response;
 
 public class Login {
 
-    public static SharedPreferences getMainPreference(Context context) {
-        return context.getSharedPreferences("main_preference", Context.MODE_PRIVATE);
-    }
+    public static void loginForReal(Context context, String username, String password, TwoFAConfig twoFAConfig, OnFinishedUpdateRequest listener) {
 
-    public static void login(Context context, OnFinishedUpdateRequest listener) {
 
-        System.out.println("Login");
-
-        String password;
-        String username = getMainPreference(context).getString("username", null);
-
-        if (username == null) {
+        if (username == null || password == null) {
             listener.onFinishedUpdateRequest(false);
             return;
         }
-        try {
-            byte[] passwordBytes = CryptoUtil.decrypt(CryptoUtil.getKeyStoreSecretKey("passwordKey"), context, CryptoUtil.FileNames.ENC_USER_DATA_FILE_NAME);
-            if (passwordBytes == null) {
-                listener.onFinishedUpdateRequest(false);
-                return;
-            }
-            password = new String(passwordBytes);
-        } catch (Exception e) {
-            listener.onFinishedUpdateRequest(false);
-            return;
-        }
+
+        System.out.println(username + " | " + password);
+
 
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
-        RequestBody body = RequestBody.create("{\"emailOrUsername\":\"" + username + "\",\"password\":\"" + password + "\",\"hash\":null,\"mobileApp\":false,\"institutionId\":null}", JSON);
+
+        String twoFAString = "";
+
+        if (twoFAConfig != null && twoFAConfig.generateCode() != null) {
+            twoFAString = "\"twoFactorCode\":\"" + twoFAConfig.generateCode() + "\",";
+        }
+
+        System.out.println("{\"emailOrUsername\":\"" + username + "\",\"password\":\"" + password + "\",\"hash\":null,\"mobileApp\":false," + twoFAString + "\"institutionId\":null}");
+
+        RequestBody body = RequestBody.create("{\"emailOrUsername\":\"" + username + "\",\"password\":\"" + password + "\",\"hash\":null,\"mobileApp\":false," + twoFAString + "\"institutionId\":null}", JSON);
         Request request = new Request.Builder()
                 .url("https://login.schulmanager-online.de/api/login")
                 .post(body)
@@ -66,17 +60,37 @@ public class Login {
             }
 
             @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                try {
+                    String responeString = response.body().string();
 
-                String responeString = response.body().string();
+                    UserData userData = CryptoUtil.getUserData(context);
+                    if (userData == null) {
+                        userData = new UserData();
+                    }
+                    userData.setUserString(new GsonRepository().getStudent(responeString));
+                    CryptoUtil.setUserData(context, userData);
 
-                String token = new GsonRepository().getToken(responeString);
-                CryptoUtil.encrypt(token.getBytes(StandardCharsets.UTF_8), CryptoUtil.getKeyStoreSecretKey("tokenKey"), context, CryptoUtil.FileNames.ENC_TOKEN_FILE_NAME);
-                String student = new GsonRepository().getStudent(responeString);
-                CryptoUtil.encrypt(student.getBytes(StandardCharsets.UTF_8), CryptoUtil.getKeyStoreSecretKey("studentKey"), context, CryptoUtil.FileNames.ENC_STUDENT_FILE_NAME);
-                listener.onFinishedUpdateRequest(true);
+                    CryptoUtil.encrypt(
+                            new GsonRepository().getToken(responeString).getBytes(StandardCharsets.UTF_8),
+                            CryptoUtil.getKeyStoreSecretKey("tokenKey"),
+                            context,
+                            CryptoUtil.FileNames.ENC_TOKEN_FILE_NAME);
+                    listener.onFinishedUpdateRequest(true);
+                } catch (Exception e) {
+                    listener.onFinishedUpdateRequest(false);
+                }
             }
         });
+    }
+
+    public static void login(Context context, OnFinishedUpdateRequest listener) {
+        UserData userData = CryptoUtil.getUserData(context);
+        if (userData == null || userData.getEmail() == null || userData.getPassword() == null) {
+            listener.onFinishedUpdateRequest(false);
+            return;
+        }
+        loginForReal(context, userData.getEmail(), new String(userData.getPassword()), userData.getTwoFAConfig(), listener);
     }
 
 
@@ -84,13 +98,6 @@ public class Login {
         if (!new File(context.getFilesDir(), CryptoUtil.FileNames.ENC_TOKEN_FILE_NAME).exists())
             throw new IOException();
         byte[] bytes = CryptoUtil.decrypt(CryptoUtil.getKeyStoreSecretKey("tokenKey"), context, CryptoUtil.FileNames.ENC_TOKEN_FILE_NAME);
-        return new String(bytes);
-    }
-
-    public static String getStudent(Context context) throws IOException, BadPaddingException {
-        if (!new File(context.getFilesDir(), CryptoUtil.FileNames.ENC_STUDENT_FILE_NAME).exists())
-            throw new IOException();
-        byte[] bytes = CryptoUtil.decrypt(CryptoUtil.getKeyStoreSecretKey("studentKey"), context, CryptoUtil.FileNames.ENC_STUDENT_FILE_NAME);
         return new String(bytes);
     }
 

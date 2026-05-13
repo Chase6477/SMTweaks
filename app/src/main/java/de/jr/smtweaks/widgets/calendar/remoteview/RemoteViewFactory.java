@@ -26,15 +26,20 @@ import de.jr.smtweaks.widgets.calendar.HolidayItem;
 import de.jr.smtweaks.widgets.calendar.TableItem;
 
 public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory {
+
+    private final int COLUMNS = 1;
+
     private final Context context;
     private final int widgetID;
     private final SharedPreferences widgetPrefs;
     private final int[][] textIdArray = {
-            {R.id.t5l1, R.id.t5r1, R.id.t5b1, R.id.bg51},
-            {R.id.t5l2, R.id.t5r2, R.id.t5b2, R.id.bg52},
-            {R.id.t5l3, R.id.t5r3, R.id.t5b3, R.id.bg53},
-            {R.id.t5l4, R.id.t5r4, R.id.t5b4, R.id.bg54},
-            {R.id.t5l5, R.id.t5r5, R.id.t5b5, R.id.bg55}
+            {R.id.tl1, R.id.tr1, R.id.tb1, R.id.bg1, R.id.im1},
+            {R.id.tl2, R.id.tr2, R.id.tb2, R.id.bg2, R.id.im2},
+            {R.id.tl3, R.id.tr3, R.id.tb3, R.id.bg3, R.id.im3},
+            {R.id.tl4, R.id.tr4, R.id.tb4, R.id.bg4, R.id.im4},
+            {R.id.tl5, R.id.tr5, R.id.tb5, R.id.bg5, R.id.im5},
+            {R.id.tl6, R.id.tr6, R.id.tb6, R.id.bg6, R.id.im6},
+            {R.id.tl7, R.id.tr7, R.id.tb7, R.id.bg7, R.id.im7}
     };
     private HolidayItem[] holidayItems;
     private TableItem[] items = new TableItem[0];
@@ -48,6 +53,7 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
             return;
         onDataSetChanged();
     }
+
 
     @Override
     public int getCount() {
@@ -68,7 +74,7 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
 
     @Override
     public RemoteViews getLoadingView() {
-        return new RemoteViews(context.getPackageName(), R.layout.calendar_widget_five_items);
+        return new RemoteViews(context.getPackageName(), R.layout.calendar_widget_items);
     }
 
 
@@ -79,10 +85,10 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
         if (items == null) {
             return null;
         }
-        RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.calendar_widget_five_items);
+        RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.calendar_widget_items);
 
         rv.setTextViewText(R.id.cell0, String.valueOf(position + 1));
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < COLUMNS; i++) {
             rv.setInt(textIdArray[i][3], "setBackgroundColor", Color.TRANSPARENT);
             for (int j = 0; j < 3; j++) {
                 rv.setTextViewText(textIdArray[i][j], "");
@@ -92,7 +98,7 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
         if (holidayItems != null && widgetPrefs.getBoolean("show_holidays", true)) {
             Calendar day = getMonday();
             LocalDate localDate;
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < COLUMNS; i++) {
                 localDate = day.toInstant()
                         .atZone(ZoneId.systemDefault())
                         .toLocalDate();
@@ -107,7 +113,6 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
         }
 
         for (TableItem item : items) {
-
             if (item.getRow() == position + 1) {
                 int[] text = textIdArray[item.getCol() - 1];
                 setText(rv, text[0], item.getLeftTop(), defaultColor);
@@ -182,20 +187,14 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
             else
                 fileName = CryptoUtil.FileNames.PLAIN_CALENDAR_TABLE_DATA_FILE_NAME_SMALL;
 
-            items = new GsonRepository().jsonToTableItemList(new String(CryptoUtil.readFile(
-                    new File(context.getFilesDir(), fileName)
-            )));
+            byte[] bytes = CryptoUtil.readFile(new File(context.getFilesDir(), fileName));
+
+            if (bytes == null)
+                items = new TableItem[0];
+            else
+                items = new GsonRepository().jsonToTableItemList(new String(bytes));
         } catch (IOException e) {
             Log.e("Data", "Data file not found", e);
-        }
-
-        try {
-
-            holidayItems = new GsonRepository().jsonTHolidayItemList(
-                    new String(CryptoUtil.readFile(
-                            new File(context.getFilesDir(), CryptoUtil.FileNames.PLAIN_HOLIDAY_DATES_FILE_NAME)
-                    )));
-        } catch (IOException ignored) {
         }
     }
 

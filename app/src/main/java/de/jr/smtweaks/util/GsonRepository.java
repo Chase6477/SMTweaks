@@ -9,11 +9,23 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.jr.smtweaks.widgets.calendar.HolidayItem;
+import de.jr.smtweaks.UserData;
 import de.jr.smtweaks.widgets.calendar.TableItem;
 
 public class GsonRepository implements JsonInterface {
     private final Gson gson = new Gson();
+
+    @Override
+    public UserData jsonToUserData(byte[] json) {
+        if (json == null)
+            return null;
+        return gson.fromJson(new String(json), UserData.class);
+    }
+
+    @Override
+    public byte[] userDataToJson(UserData userData) {
+        return gson.toJson(userData).getBytes();
+    }
 
     @Override
     public TableItem[] schulmanagerFormatToTableItemList(String json) {
@@ -87,35 +99,6 @@ public class GsonRepository implements JsonInterface {
     @Override
     public String tableItemListToJson(TableItem[] items) {
         return gson.toJson(items);
-    }
-
-    @Override
-    public String holidayItemListToJson(HolidayItem[] items) {
-        return gson.toJson(items);
-    }
-
-    @Override
-    public HolidayItem[] jsonTHolidayItemList(String json) {
-        return gson.fromJson(json, HolidayItem[].class);
-    }
-
-    @Override
-    public HolidayItem[] getCroppedHolidayList(String holidays) {
-
-        JsonObject root = JsonParser.parseString(holidays).getAsJsonObject();
-        JsonArray jsonArray = root.getAsJsonArray("data");
-
-        HolidayItem[] items = new HolidayItem[jsonArray.size()];
-
-        for (int i = 0; i < jsonArray.size(); i++) {
-            JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
-            String startDate = jsonObject.get("starts_on").getAsString();
-            String endDate = jsonObject.get("ends_on").getAsString();
-            items[i] = new HolidayItem(startDate, endDate);
-        }
-
-
-        return items;
     }
 
     @Override

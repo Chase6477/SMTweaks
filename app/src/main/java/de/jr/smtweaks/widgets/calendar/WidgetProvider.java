@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
@@ -26,7 +27,15 @@ import de.jr.smtweaks.util.CryptoUtil;
 import de.jr.smtweaks.widgets.calendar.remoteview.RemoteViewService;
 
 public class WidgetProvider extends AppWidgetProvider {
-    private static final int[] headerIDs = {R.id.header1, R.id.header2, R.id.header3, R.id.header4, R.id.header5};
+    private static final int[][] headerIDs = {
+            {R.id.header1, R.id.imh1},
+            {R.id.header2, R.id.imh2},
+            {R.id.header3, R.id.imh3},
+            {R.id.header4, R.id.imh4},
+            {R.id.header5, R.id.imh5},
+            {R.id.header6, R.id.imh6},
+            {R.id.header7, R.id.imh7}
+    };
 
     public static void updateButtonText(Context context, int appwidgetId, String text) {
         RemoteViews views = generateRemoteView(context);
@@ -39,7 +48,7 @@ public class WidgetProvider extends AppWidgetProvider {
     }
 
     public static void updateRemoteView(RemoteViews views, Context context, int appWidgetId) {
-        updateRemoteViewFormats(views, context);
+        updateRemoteViewFormats(views, context, appWidgetId);
 
         Intent serviceIntent = new Intent(context, RemoteViewService.class);
         serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
@@ -76,20 +85,24 @@ public class WidgetProvider extends AppWidgetProvider {
 
     }
 
-    private static void updateRemoteViewFormats(RemoteViews views, Context context) {
+    private static void updateRemoteViewFormats(RemoteViews views, Context context, int appWidgetId) {
+
+        SharedPreferences widgetPrefs = context.getSharedPreferences(context.getString(R.string.calendar_widget_preference, appWidgetId), Context.MODE_PRIVATE);
         int dayOfWeek = (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 5) % 7;
-        for (int i = 0; i < 5; i++) {
-            views.setTextColor(headerIDs[i], ContextCompat.getColor(context, R.color.widget_default_text));
-            views.setInt(headerIDs[i], "setBackgroundColor", Color.TRANSPARENT);
+        int columns = widgetPrefs.getInt("column_count", 5);
+        for (int i = 0; i < columns; i++) {
+            views.setTextColor(headerIDs[i][0], ContextCompat.getColor(context, R.color.widget_default_text));
+            views.setInt(headerIDs[i][0], "setBackgroundColor", Color.TRANSPARENT);
+            views.setTextViewText(headerIDs[i][0], context.getResources().getStringArray(R.array.weekDay)[i]);
         }
         if (dayOfWeek <= 4) {
-            views.setTextColor(headerIDs[dayOfWeek], ContextCompat.getColor(context, R.color.widget_fat_text));
+            views.setTextColor(headerIDs[dayOfWeek][0], ContextCompat.getColor(context, R.color.widget_fat_text));
             views.setInt(
-                    headerIDs[dayOfWeek],
+                    headerIDs[dayOfWeek][0],
                     "setPaintFlags",
                     Paint.FAKE_BOLD_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG
             );
-            views.setTextViewTextSize(headerIDs[dayOfWeek], TypedValue.COMPLEX_UNIT_SP, 16);
+            views.setTextViewTextSize(headerIDs[dayOfWeek][0], TypedValue.COMPLEX_UNIT_SP, 16);
         }
         File file = new File(context.getFilesDir(), CryptoUtil.FileNames.PLAIN_CALENDAR_TABLE_DATA_FILE_NAME);
         if (MainActivity.DEBUG) {

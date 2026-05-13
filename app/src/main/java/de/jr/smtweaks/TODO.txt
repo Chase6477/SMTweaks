@@ -1,0 +1,6 @@
+TODO:
+ FEATURES
+ Nachträgliches verändern von Einstellungen
+ Automatisches Fetching
+ Woche richtig fetchen
+
