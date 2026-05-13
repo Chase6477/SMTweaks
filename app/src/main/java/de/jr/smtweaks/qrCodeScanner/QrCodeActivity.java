@@ -128,11 +128,9 @@ public class QrCodeActivity extends AppCompatActivity {
                 if (result != null && !result.equals(lastResult))
                     Toast.makeText(this, "Wrong code", Toast.LENGTH_SHORT).show();
                 lastResult = result;
-                System.out.println(false);
                 return;
             }
 
-            System.out.println(true);
             Intent intent = new Intent();
             intent.putExtra(EXTRA_RESULT, result);
             setResult(RESULT_OK, intent);

@@ -27,7 +27,7 @@ import de.jr.smtweaks.widgets.calendar.TableItem;
 
 public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory {
 
-    private final int COLUMNS = 1;
+    private final int COLUMNS = 7;
 
     private final Context context;
     private final int widgetID;
@@ -195,6 +195,20 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
                 items = new GsonRepository().jsonToTableItemList(new String(bytes));
         } catch (IOException e) {
             Log.e("Data", "Data file not found", e);
+        }
+
+        try {
+            byte[] bytes = CryptoUtil.readFile(
+                    new File(context.getFilesDir(), CryptoUtil.FileNames.HOLIDAY_DATES_FILE_NAME)
+            );
+            if (bytes == null)
+                bytes = new byte[0];
+
+            holidayItems = new GsonRepository().jsonToHolidayItem(new String(bytes));
+            if (holidayItems == null)
+                holidayItems = new HolidayItem[0];
+        } catch (IOException e) {
+            Log.e("Holiday", "Holiday file not found", e);
         }
     }
 

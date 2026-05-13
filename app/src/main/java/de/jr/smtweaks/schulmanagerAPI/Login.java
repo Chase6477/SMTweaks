@@ -4,11 +4,7 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-
-import javax.crypto.BadPaddingException;
 
 import de.jr.smtweaks.UserData;
 import de.jr.smtweaks.qrCodeScanner.TwoFAConfig;
@@ -24,16 +20,15 @@ import okhttp3.Response;
 
 public class Login {
 
+    public static String BUNDLE_VERSION = "d621ff8b33";
+
     public static void loginForReal(Context context, String username, String password, TwoFAConfig twoFAConfig, OnFinishedUpdateRequest listener) {
 
 
         if (username == null || password == null) {
-            listener.onFinishedUpdateRequest(false);
+            listener.onFinishedUpdateRequest(null);
             return;
         }
-
-        System.out.println(username + " | " + password);
-
 
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
@@ -42,8 +37,6 @@ public class Login {
         if (twoFAConfig != null && twoFAConfig.generateCode() != null) {
             twoFAString = "\"twoFactorCode\":\"" + twoFAConfig.generateCode() + "\",";
         }
-
-        System.out.println("{\"emailOrUsername\":\"" + username + "\",\"password\":\"" + password + "\",\"hash\":null,\"mobileApp\":false," + twoFAString + "\"institutionId\":null}");
 
         RequestBody body = RequestBody.create("{\"emailOrUsername\":\"" + username + "\",\"password\":\"" + password + "\",\"hash\":null,\"mobileApp\":false," + twoFAString + "\"institutionId\":null}", JSON);
         Request request = new Request.Builder()
@@ -56,7 +49,7 @@ public class Login {
 
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                listener.onFinishedUpdateRequest(false);
+                listener.onFinishedUpdateRequest(null);
             }
 
             @Override
@@ -71,14 +64,9 @@ public class Login {
                     userData.setUserString(new GsonRepository().getStudent(responeString));
                     CryptoUtil.setUserData(context, userData);
 
-                    CryptoUtil.encrypt(
-                            new GsonRepository().getToken(responeString).getBytes(StandardCharsets.UTF_8),
-                            CryptoUtil.getKeyStoreSecretKey("tokenKey"),
-                            context,
-                            CryptoUtil.FileNames.ENC_TOKEN_FILE_NAME);
-                    listener.onFinishedUpdateRequest(true);
+                    listener.onFinishedUpdateRequest(new GsonRepository().getToken(responeString));
                 } catch (Exception e) {
-                    listener.onFinishedUpdateRequest(false);
+                    listener.onFinishedUpdateRequest(null);
                 }
             }
         });
@@ -87,21 +75,13 @@ public class Login {
     public static void login(Context context, OnFinishedUpdateRequest listener) {
         UserData userData = CryptoUtil.getUserData(context);
         if (userData == null || userData.getEmail() == null || userData.getPassword() == null) {
-            listener.onFinishedUpdateRequest(false);
+            listener.onFinishedUpdateRequest(null);
             return;
         }
         loginForReal(context, userData.getEmail(), new String(userData.getPassword()), userData.getTwoFAConfig(), listener);
     }
 
-
-    public static String getToken(Context context) throws IOException, BadPaddingException {
-        if (!new File(context.getFilesDir(), CryptoUtil.FileNames.ENC_TOKEN_FILE_NAME).exists())
-            throw new IOException();
-        byte[] bytes = CryptoUtil.decrypt(CryptoUtil.getKeyStoreSecretKey("tokenKey"), context, CryptoUtil.FileNames.ENC_TOKEN_FILE_NAME);
-        return new String(bytes);
-    }
-
     public interface OnFinishedUpdateRequest {
-        void onFinishedUpdateRequest(boolean successful);
+        void onFinishedUpdateRequest(String token);
     }
 }

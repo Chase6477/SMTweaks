@@ -26,6 +26,8 @@ import java.util.Collections;
 import java.util.List;
 
 import de.jr.smtweaks.schulmanagerAPI.CalendarTable;
+import de.jr.smtweaks.schulmanagerAPI.Holiday;
+import de.jr.smtweaks.schulmanagerAPI.Login;
 import de.jr.smtweaks.util.CryptoUtil;
 import de.jr.smtweaks.util.GithubUpdateChecker;
 import de.jr.smtweaks.util.GsonRepository;
@@ -61,20 +63,42 @@ public class UpdateService extends Service {
         if (widgetID == -1)
             stop();
 
-        new CalendarTable().getCalendarTable(this, tableItemList -> {
-            if (tableItemList == null) {
-                stop();
+
+        Login.login(context, token -> {
+
+            UserData userData = CryptoUtil.getUserData(context);
+
+            if (userData == null)
                 return;
-            }
-            try {
-                TableItem[] merged = getFullWeekTableItems(tableItemList);
-                CryptoUtil.writeFile(new File(context.getFilesDir(), CryptoUtil.FileNames.PLAIN_CALENDAR_TABLE_DATA_FILE_NAME), new GsonRepository().tableItemListToJson(merged).getBytes(StandardCharsets.UTF_8));
-                CryptoUtil.writeFile(new File(context.getFilesDir(), CryptoUtil.FileNames.PLAIN_CALENDAR_TABLE_DATA_FILE_NAME_SMALL), new GsonRepository().tableItemListToJson(tableItemList).getBytes(StandardCharsets.UTF_8));
-            } catch (IOException e) {
-                Log.e("File", "Could not write files", e);
-            }
-            stop();
-        }, 0);
+
+
+            Holiday.fetchData(token, holidayItems -> {
+                if (holidayItems == null)
+                    return;
+
+                try {
+                    CryptoUtil.writeFile(
+                            new File(getFilesDir(), CryptoUtil.FileNames.HOLIDAY_DATES_FILE_NAME),
+                            new GsonRepository().holidayItemToJson(holidayItems).getBytes(StandardCharsets.UTF_8));
+                } catch (IOException ignore) {
+                }
+            });
+            CalendarTable.fetchData(token, userData.getUserString(), tableItemList -> {
+                if (tableItemList == null) {
+                    stop();
+                    return;
+                }
+
+                try {
+                    TableItem[] merged = getFullWeekTableItems(tableItemList);
+                    CryptoUtil.writeFile(new File(context.getFilesDir(), CryptoUtil.FileNames.PLAIN_CALENDAR_TABLE_DATA_FILE_NAME), new GsonRepository().tableItemListToJson(merged).getBytes(StandardCharsets.UTF_8));
+                    CryptoUtil.writeFile(new File(context.getFilesDir(), CryptoUtil.FileNames.PLAIN_CALENDAR_TABLE_DATA_FILE_NAME_SMALL), new GsonRepository().tableItemListToJson(tableItemList).getBytes(StandardCharsets.UTF_8));
+                } catch (IOException e) {
+                    Log.e("File", "Could not write files", e);
+                }
+                stop();
+            });
+        });
         return START_NOT_STICKY;
     }
 

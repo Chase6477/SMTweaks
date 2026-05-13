@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 twoFAConfig,
                 successful -> runOnUiThread(() -> {
                     TextView validateData = findViewById(R.id.config_app_text_validate_data);
-                    if (successful) {
+                    if (successful != null) {
                         UserData userData = CryptoUtil.getUserData(this);
                         if (userData == null)
                             userData = new UserData();

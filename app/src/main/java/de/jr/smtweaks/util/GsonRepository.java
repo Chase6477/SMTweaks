@@ -2,6 +2,7 @@ package de.jr.smtweaks.util;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.jr.smtweaks.UserData;
+import de.jr.smtweaks.widgets.calendar.HolidayItem;
 import de.jr.smtweaks.widgets.calendar.TableItem;
 
 public class GsonRepository implements JsonInterface {
@@ -111,6 +113,35 @@ public class GsonRepository implements JsonInterface {
     public String getStudent(String json) {
         JsonObject root = JsonParser.parseString(json).getAsJsonObject();
         return root.getAsJsonObject("user").getAsJsonObject("associatedStudent").toString();
+    }
+
+    @Override
+    public HolidayItem[] schulmanagerFormatToHolidayItem(String json) {
+        JsonObject root = JsonParser.parseString(json).getAsJsonObject();
+        JsonArray dates =  root.
+                getAsJsonArray("results").get(0).getAsJsonObject().
+                getAsJsonArray("data");
+
+        ArrayList<HolidayItem> items = new ArrayList<>();
+
+        for (JsonElement date : dates) {
+
+            items.add(new HolidayItem(
+                    date.getAsJsonObject().get("start").getAsString(),
+                    date.getAsJsonObject().get("end").getAsString())
+            );
+        }
+        return items.toArray(new HolidayItem[0]);
+    }
+
+    @Override
+    public String holidayItemToJson(HolidayItem[] items) {
+        return gson.toJson(items);
+    }
+
+    @Override
+    public HolidayItem[] jsonToHolidayItem(String json) {
+        return gson.fromJson(json, HolidayItem[].class);
     }
 
 
