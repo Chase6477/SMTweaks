@@ -112,7 +112,7 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
                         break;
                     }
                 }
-                localDate.plusDays(1);
+                localDate = localDate.plusDays(1);
             }
         }
 

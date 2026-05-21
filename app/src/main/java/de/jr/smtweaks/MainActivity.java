@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void start() {
+        Upgrade.upgrade(this);
         SharedPreferences mainPrefs = getSharedPreferences("main_preference", Context.MODE_PRIVATE);
         MaterialSwitch aSwitch = findViewById(R.id.config_app_automatic_update);
         aSwitch.setChecked(mainPrefs.getBoolean("show_update_alert", true));
