@@ -12,6 +12,13 @@ public class UserData {
 
     public UserData() {}
 
+    public UserData(String email, char[] password, TwoFAConfig twoFAConfig) {
+        this.email = email;
+        this.password = password;
+        this.twoFAConfig = twoFAConfig;
+    }
+
+
     public TwoFAConfig getTwoFAConfig() {
         return twoFAConfig;
     }

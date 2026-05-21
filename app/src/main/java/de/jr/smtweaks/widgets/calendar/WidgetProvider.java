@@ -20,7 +20,6 @@ import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 
-import de.jr.smtweaks.MainActivity;
 import de.jr.smtweaks.R;
 import de.jr.smtweaks.UpdateService;
 import de.jr.smtweaks.util.CryptoUtil;
@@ -37,10 +36,16 @@ public class WidgetProvider extends AppWidgetProvider {
             {R.id.header7, R.id.imh7}
     };
 
-    public static void updateButtonText(Context context, int appwidgetId, String text) {
-        RemoteViews views = generateRemoteView(context);
+    public static void updateButtonText(Context context, int appWidgetId, String text) {
+        RemoteViews views = new RemoteViews(
+                context.getPackageName(),
+                R.layout.calendar_table_widget
+        );
+
         views.setTextViewText(R.id.calendar_widget_update, text);
-        updateRemoteView(views, context, appwidgetId);
+
+        AppWidgetManager.getInstance(context)
+                .partiallyUpdateAppWidget(appWidgetId, views);
     }
 
     public static RemoteViews generateRemoteView(Context context) {
@@ -105,10 +110,6 @@ public class WidgetProvider extends AppWidgetProvider {
             views.setTextViewTextSize(headerIDs[dayOfWeek][0], TypedValue.COMPLEX_UNIT_SP, 16);
         }
         File file = new File(context.getFilesDir(), CryptoUtil.FileNames.PLAIN_CALENDAR_TABLE_DATA_FILE_NAME);
-        if (MainActivity.DEBUG) {
-            views.setTextViewText(R.id.calendar_widget_last_update, context.getString(R.string.calendar_table_widget_last_update, "1.1.1970 00:00"));
-            return;
-        }
         if (!file.exists())
             views.setTextViewText(R.id.calendar_widget_last_update, context.getString(R.string.calendar_table_widget_last_update, context.getString(R.string.calendar_table_widget_last_update_never)));
         else {
@@ -144,6 +145,7 @@ public class WidgetProvider extends AppWidgetProvider {
                         context.getString(R.string.calendar_widget_is_loading)
                 );
             }
+            return;
         }
         if ("de.jr.smtweaks.ACTION_CALENDAR_WIDGET_BUTTON_READY".equals(intent.getAction())) {
             int id = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
@@ -154,6 +156,7 @@ public class WidgetProvider extends AppWidgetProvider {
                         context.getString(R.string.calendar_table_widget_update)
                 );
             }
+            return;
         }
 
 

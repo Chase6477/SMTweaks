@@ -23,10 +23,7 @@
     <string name="calendar_widget_configuration_state">State</string>
     <string name="calendar_config_show_holidays">Show Holidays</string>
     <string-array name="updateInterval">
-        <item>30 minutes</item>
-        <item>45 minutes</item>
-        <item>1 hour</item>
-        <item>2 hours</item>
+        <item>Never</item>
         <item>4 hours</item>
         <item>6 hours</item>
         <item>12 hours</item>
@@ -35,11 +32,8 @@
         <item>4 days</item>
         <item>1 week</item>
     </string-array>
-    <integer-array name="updateIntervalSeconds" translatable="false">
-        <item>1800000</item>
-        <item>2700000</item>
-        <item>3600000</item>
-        <item>7200000</item>
+    <integer-array name="updateIntervalSeconds" translatable="false" >
+        <item>-1</item>
         <item>14400000</item>
         <item>21600000</item>
         <item>43200000</item>
@@ -56,6 +50,15 @@
         <item>Fr</item>
         <item>Sa</item>
         <item>Su</item>
+    </string-array>
+    <string-array name="max" translatable="false">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
     </string-array>
     <string name="notification_updating">Fetching Data</string>
     <string name="activity_welcome_text">You can now add a Widget to your Home Screen!</string>

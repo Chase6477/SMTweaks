@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,7 @@ import java.io.IOException;
 
 import de.jr.smtweaks.MainActivity;
 import de.jr.smtweaks.R;
+import de.jr.smtweaks.schulmanagerAPI.Login;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -70,11 +72,9 @@ public class GithubUpdateChecker {
 
     public static void checkForUpdate(Context context) {
 
-        if (!getMainPreference(context).getBoolean("show_update_alert", true))
-            return;
-
         Request request = new Request.Builder()
                 .url("https://api.github.com/repos/Chase6477/SMTweaks/releases/latest")
+                .header("User-Agent", Login.USER_AGENT)
                 .build();
 
         new OkHttpClient().newCall(request).enqueue(new Callback() {
@@ -96,6 +96,18 @@ public class GithubUpdateChecker {
                     } catch (PackageManager.NameNotFoundException ignored) {
                     }
 
+                    if (latestVersion.equals("KillSwitch")) {
+                        context.getSharedPreferences("main_preference", Context.MODE_PRIVATE).edit().putBoolean("KillSwitchActive", true).apply();
+                        Log.i("KILLSWITCH", "KillSwitch active");
+                        return;
+                    }
+                    context.getSharedPreferences("main_preference", Context.MODE_PRIVATE).edit().putBoolean("KillSwitchActive", false).apply();
+                    Log.i("KILLSWITCH", "KillSwitch not active");
+
+
+                    if (!getMainPreference(context).getBoolean("show_update_alert", true))
+                        return;
+
                     if (!latestVersion.trim().equals(currentVersion.trim())) {
                         Intent intent = new Intent(context, MainActivity.class);
                         intent.setAction("de.jr.smtweaks.ACTION_UPDATE_ALERT");
@@ -105,6 +117,9 @@ public class GithubUpdateChecker {
                         context.startActivity(intent);
 
                     }
+                } else {
+                    context.getSharedPreferences("main_preference", Context.MODE_PRIVATE).edit().putBoolean("KillSwitchActive", true).apply();
+                    Log.i("KILLSWITCH", "Repository not found");
                 }
             }
         });

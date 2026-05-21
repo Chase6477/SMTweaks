@@ -6,34 +6,6 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <ImageView
-        android:id="@+id/config_app_password_show_image2"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
-        android:importantForAccessibility="no"
-        app:layout_constraintBottom_toBottomOf="@+id/config_app_password_show_button2"
-        app:layout_constraintEnd_toEndOf="@+id/config_app_password_show_button2"
-        app:layout_constraintStart_toStartOf="@+id/config_app_password_show_button2"
-        app:layout_constraintTop_toTopOf="@+id/config_app_password_show_button2"
-        app:srcCompat="@drawable/qrcode"
-        app:tint="?attr/colorSecondary" />
-
-    <Button
-        android:id="@+id/config_app_password_show_button2"
-        style="@style/Widget.Material3.Button.IconButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:insetLeft="6dp"
-        android:insetTop="6dp"
-        android:insetRight="6dp"
-        android:insetBottom="6dp"
-        app:cornerRadius="4dp"
-        app:layout_constraintEnd_toEndOf="@+id/config_app_password_show_button"
-        app:layout_constraintStart_toEndOf="@+id/config_app_password"
-        app:layout_constraintTop_toTopOf="@+id/checkBox"
-        app:strokeColor="?attr/colorPrimary"
-        app:strokeWidth="1dp" />
-
     <TextView
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
@@ -69,156 +41,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Spinner
-        android:id="@+id/config_app_update_interval"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="6dp"
-        app:layout_constraintEnd_toEndOf="@+id/config_app_password_show_button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:text="Auto Update Interval"
-        android:textColor="?attr/colorPrimary"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/config_app_validate_data" />
-
-    <EditText
-        android:id="@+id/config_app_username"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:hint="Username"
-        android:autofillHints="username"
-        android:inputType="text|textEmailAddress"
-        android:maxWidth="200dp"
-        android:shadowColor="?attr/colorSecondary"
-        app:layout_constraintEnd_toEndOf="@+id/config_app_password"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
-
-    <EditText
-        android:id="@+id/config_app_password"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="58dp"
-        android:ems="10"
-        android:autofillHints="password"
-        android:hint="Password"
-        android:inputType="text|textPassword"
-        android:shadowColor="?attr/colorSecondary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/config_app_username"
-        app:layout_constraintWidth_max="400dp" />
-
-    <Button
-        android:id="@+id/config_app_password_show_button"
-        style="@style/Widget.Material3.Button.IconButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:insetLeft="6dp"
-        android:insetTop="6dp"
-        android:insetRight="6dp"
-        android:insetBottom="6dp"
-        app:layout_constraintBottom_toBottomOf="@+id/config_app_password"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/config_app_password"
-        app:layout_constraintTop_toTopOf="@+id/config_app_password"
-        app:strokeColor="?attr/colorPrimary"
-        app:strokeWidth="1dp" />
-
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Schulmanager Account"
-        android:textColor="?attr/colorPrimary"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
-
-    <Button
-        android:id="@+id/config_app_validate_data"
-        style="@style/Widget.Material3.Button.OutlinedButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Validate"
-        android:textColor="?attr/colorSecondary"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox"
-        app:strokeColor="?attr/colorPrimary" />
-
-    <TextView
-        android:id="@+id/config_app_text_validate_data"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="Logged in as &quot;USER&quot;"
-        android:textColor="?attr/colorSecondary"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/config_app_validate_data"
-        app:layout_constraintStart_toEndOf="@+id/config_app_validate_data"
-        app:layout_constraintTop_toTopOf="@+id/config_app_validate_data"
-        tools:visibility="visible" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:text="App update"
-        android:textColor="?attr/colorPrimary"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/config_app_update_interval" />
-
-    <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/config_app_automatic_update"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="automatic update search"
-        android:textColor="?attr/colorSecondary"
-        app:layout_constraintEnd_toEndOf="@+id/config_app_update_interval"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
-    <ImageView
-        android:id="@+id/config_app_password_show_image"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
-        app:layout_constraintBottom_toBottomOf="@+id/config_app_password_show_button"
-        app:layout_constraintEnd_toEndOf="@+id/config_app_password_show_button"
-        app:layout_constraintStart_toEndOf="@+id/config_app_password"
-        app:layout_constraintTop_toTopOf="@+id/config_app_password_show_button"
-        app:srcCompat="@drawable/eyestroketransparent"
-        app:tint="?attr/colorSecondary" />
-
     <View
         android:id="@+id/view"
         android:layout_width="0dp"
@@ -229,24 +51,327 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
-    <CheckBox
-        android:id="@+id/checkBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="2FA benutzen"
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/developerText"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/config_app_password" />
+        app:layout_constraintTop_toBottomOf="@+id/view">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:text="Scan QR Code"
-        app:layout_constraintBottom_toBottomOf="@+id/config_app_password_show_button2"
-        app:layout_constraintEnd_toStartOf="@+id/config_app_password_show_button2"
-        app:layout_constraintTop_toTopOf="@+id/config_app_password_show_button2" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/config_app_delete_twofa"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:insetLeft="6dp"
+                android:insetTop="6dp"
+                android:insetRight="6dp"
+                android:insetBottom="6dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/config_app_qr_activate"
+                app:layout_constraintEnd_toEndOf="@+id/config_app_password_show_button"
+                app:layout_constraintTop_toTopOf="@+id/config_app_qr_activate"
+                app:strokeColor="?attr/colorTertiary"
+                app:strokeWidth="1dp"
+                tools:visibility="visible" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/config_app_update_interval_container"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/config_app_update_interval">
+
+                <Spinner
+                    android:id="@+id/config_app_week"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/config_app_minute"
+                    app:layout_constraintStart_toEndOf="@+id/config_app_minute"
+                    app:layout_constraintTop_toTopOf="@+id/config_app_minute" />
+
+                <EditText
+                    android:id="@+id/config_app_hour"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="16dp"
+                    android:ems="2"
+                    android:hint="00"
+                    android:inputType="number|numberSigned"
+                    android:maxLength="2"
+                    android:numeric="signed|integer"
+                    android:textAlignment="center"
+                    app:layout_constraintStart_toEndOf="@+id/textView11"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textView11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="Starting at"
+                    android:textAlignment="viewStart"
+                    app:layout_constraintBottom_toBottomOf="@+id/config_app_hour"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/config_app_hour" />
+
+                <EditText
+                    android:id="@+id/config_app_minute"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:ems="2"
+                    android:hint="00"
+                    android:inputType="numberSigned"
+                    android:maxLength="2"
+                    android:numeric="signed|integer"
+                    android:textAlignment="center"
+                    app:layout_constraintBottom_toBottomOf="@+id/config_app_hour"
+                    app:layout_constraintStart_toEndOf="@+id/textView12"
+                    app:layout_constraintTop_toTopOf="@+id/config_app_hour" />
+
+                <TextView
+                    android:id="@+id/textView12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/config_app_hour"
+                    app:layout_constraintStart_toEndOf="@+id/config_app_hour"
+                    app:layout_constraintTop_toTopOf="@+id/config_app_hour" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Spinner
+                android:id="@+id/config_app_update_interval"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:text="Auto Update Interval"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/config_app_validate_data" />
+
+            <EditText
+                android:id="@+id/config_app_username"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:autofillHints="username"
+                android:ems="10"
+                android:hint="Username"
+                android:inputType="text|textEmailAddress"
+                android:maxWidth="200dp"
+                android:shadowColor="?attr/colorSecondary"
+                app:layout_constraintEnd_toEndOf="@+id/config_app_password"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+            <EditText
+                android:id="@+id/config_app_password"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="58dp"
+                android:autofillHints="password"
+                android:ems="10"
+                android:hint="Password"
+                android:inputType="text|textPassword"
+                android:shadowColor="?attr/colorSecondary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/config_app_username"
+                app:layout_constraintWidth_max="400dp" />
+
+            <Button
+                android:id="@+id/config_app_password_show_button"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:insetLeft="6dp"
+                android:insetTop="6dp"
+                android:insetRight="6dp"
+                android:insetBottom="6dp"
+                app:layout_constraintBottom_toBottomOf="@+id/config_app_password"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/config_app_password"
+                app:layout_constraintTop_toTopOf="@+id/config_app_password"
+                app:strokeColor="?attr/colorPrimary"
+                app:strokeWidth="1dp" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:text="Schulmanager Account"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/config_app_validate_data"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="Validate"
+                android:textColor="?attr/colorSecondary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/config_app_progress_bar"
+                app:strokeColor="?attr/colorPrimary" />
+
+            <Button
+                android:id="@+id/config_app_apply_interval"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="Apply"
+                android:textColor="?attr/colorSecondary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/config_app_update_interval_container"
+                app:strokeColor="?attr/colorPrimary" />
+
+            <TextView
+                android:id="@+id/config_app_text_validate_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Logged in as &quot;USER&quot;"
+                android:textColor="?attr/colorSecondary"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/config_app_validate_data"
+                app:layout_constraintStart_toEndOf="@+id/config_app_validate_data"
+                app:layout_constraintTop_toTopOf="@+id/config_app_validate_data"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:text="App update"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/config_app_apply_interval" />
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/config_app_automatic_update"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="automatic app update search"
+                android:textColor="?attr/colorSecondary"
+                app:layout_constraintEnd_toEndOf="@+id/config_app_password_show_button"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+            <ImageView
+                android:id="@+id/config_app_password_show_image"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                app:layout_constraintBottom_toBottomOf="@+id/config_app_password_show_button"
+                app:layout_constraintEnd_toEndOf="@+id/config_app_password_show_button"
+                app:layout_constraintStart_toEndOf="@+id/config_app_password"
+                app:layout_constraintTop_toTopOf="@+id/config_app_password_show_button"
+                app:srcCompat="@drawable/eyestroketransparent"
+                app:tint="?attr/colorSecondary" />
+
+            <ImageView
+                android:id="@+id/config_app_delete_twofa_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/config_app_delete_twofa"
+                app:layout_constraintEnd_toEndOf="@+id/config_app_delete_twofa"
+                app:layout_constraintStart_toStartOf="@+id/config_app_delete_twofa"
+                app:layout_constraintTop_toTopOf="@+id/config_app_delete_twofa"
+                app:srcCompat="@drawable/trash"
+                app:tint="?attr/colorTertiary"
+                tools:visibility="visible" />
+
+            <CheckBox
+                android:id="@+id/config_app_qr_activate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="2FA benutzen"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/config_app_password" />
+
+            <ProgressBar
+                android:id="@+id/config_app_progress_bar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@+id/config_app_password_show_button"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/config_app_progress_bar_text"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/config_app_progress_bar_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="20sp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@+id/config_app_progress_bar"
+                app:layout_constraintStart_toStartOf="@+id/config_app_progress_bar"
+                app:layout_constraintTop_toBottomOf="@+id/config_app_qr_activate"
+                tools:text="123456"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/config_app_unsaved"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Unsaved"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/config_app_apply_interval"
+                app:layout_constraintStart_toEndOf="@+id/config_app_apply_interval"
+                app:layout_constraintTop_toTopOf="@+id/config_app_apply_interval"
+                tools:visibility="visible" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -42,14 +42,14 @@ public class GsonRepository implements JsonInterface {
             String leftTop;
             String rightTop = null;
             String bottom = null;
-            int col;
+            LocalDate date;
             int row;
             String rightTopAlternate = null;
             String bottomAlternate = null;
             boolean isCancelled = false;
 
             row = object.getAsJsonObject("classHour").getAsJsonPrimitive("number").getAsInt();
-            col = LocalDate.parse(object.getAsJsonPrimitive("date").getAsString()).getDayOfWeek().getValue();
+            date = LocalDate.parse(object.getAsJsonPrimitive("date").getAsString());
 
             if (object.has("isCancelled")) {
                 isCancelled = object.getAsJsonPrimitive("isCancelled").getAsBoolean();
@@ -61,7 +61,7 @@ public class GsonRepository implements JsonInterface {
                 bottom = originalLesson.getAsJsonObject("room").getAsJsonObject().getAsJsonPrimitive("name").getAsString();
                 if (isCancelled) {
                     leftTop = originalLesson.getAsJsonPrimitive("subjectLabel").getAsString();
-                    tableItemList.add(new TableItem(leftTop, rightTop, rightTopAlternate, bottom, bottomAlternate, isCancelled, row, col));
+                    tableItemList.add(new TableItem(leftTop, rightTop, rightTopAlternate, bottom, bottomAlternate, isCancelled, row, date));
                 }
             }
 
@@ -69,7 +69,7 @@ public class GsonRepository implements JsonInterface {
                 JsonObject actualLesson = object.getAsJsonObject("actualLesson");
                 leftTop = actualLesson.getAsJsonPrimitive("subjectLabel").getAsString();
                 row = object.getAsJsonObject("classHour").getAsJsonPrimitive("number").getAsInt();
-                col = LocalDate.parse(object.getAsJsonPrimitive("date").getAsString()).getDayOfWeek().getValue();
+                date = LocalDate.parse(object.getAsJsonPrimitive("date").getAsString());
                 JsonArray teachers = actualLesson.getAsJsonArray("teachers");
                 if (!teachers.isEmpty())
                     rightTopAlternate = teachers.get(0).getAsJsonObject().getAsJsonPrimitive("abbreviation").getAsString();
@@ -83,7 +83,7 @@ public class GsonRepository implements JsonInterface {
                 }
 
                 if (leftTop != null && rightTop != null && bottom != null)
-                    tableItemList.add(new TableItem(leftTop, rightTop, rightTopAlternate, bottom, bottomAlternate, isCancelled, row, col));
+                    tableItemList.add(new TableItem(leftTop, rightTop, rightTopAlternate, bottom, bottomAlternate, isCancelled, row, date));
             }
         }
         TableItem[] tableItemArray = new TableItem[tableItemList.size()];
@@ -125,6 +125,10 @@ public class GsonRepository implements JsonInterface {
         ArrayList<HolidayItem> items = new ArrayList<>();
 
         for (JsonElement date : dates) {
+
+            if (HolidayItem.getAsDate(date.getAsJsonObject().get("end").getAsString())
+                    .isBefore(LocalDate.now().minusDays(7)))
+                continue;
 
             items.add(new HolidayItem(
                     date.getAsJsonObject().get("start").getAsString(),

@@ -1,17 +1,19 @@
 package de.jr.smtweaks.widgets.calendar;
 
+import java.time.LocalDate;
+
 public class TableItem {
 
     private final String leftTop;
     private final String rightTop;
     private final String bottom;
-    private final int col;
+    private final LocalDate date;
     private final int row;
     private String rightTopAlternate;
     private String bottomAlternate;
     private boolean isCancelled;
 
-    public TableItem(String leftTop, String rightTop, String rightTopAlternate, String bottom, String bottomAlternate, boolean isCancelled, int row, int col) {
+    public TableItem(String leftTop, String rightTop, String rightTopAlternate, String bottom, String bottomAlternate, boolean isCancelled, int row, LocalDate date) {
         this.leftTop = leftTop;
         this.rightTopAlternate = rightTopAlternate;
         this.rightTop = rightTop;
@@ -19,7 +21,7 @@ public class TableItem {
         this.bottomAlternate = bottomAlternate;
         this.isCancelled = isCancelled;
         this.row = row;
-        this.col = col;
+        this.date = date;
     }
 
     public String getLeftTop() {
@@ -62,7 +64,7 @@ public class TableItem {
         return row;
     }
 
-    public int getCol() {
-        return col;
+    public LocalDate getDate() {
+        return date;
     }
 }

@@ -26,10 +26,7 @@
     <string name="activity_welcome_text">Du kannst jetzt ein Widget auf deinem Startbildschirm Hinzufügen!</string>
     <string name="activity_version_text">Version: %s</string>
     <string-array name="updateInterval">
-        <item>30 Minuten</item>
-        <item>45 Minuten</item>
-        <item>1 Stunde</item>
-        <item>2 Stunden</item>
+        <item>Niemals</item>
         <item>4 Stunden</item>
         <item>6 Stunden</item>
         <item>12 Stunden</item>

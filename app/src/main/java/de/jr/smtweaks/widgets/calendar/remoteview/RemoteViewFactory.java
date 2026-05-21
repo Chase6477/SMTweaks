@@ -1,5 +1,7 @@
 package de.jr.smtweaks.widgets.calendar.remoteview;
 
+import static android.view.View.GONE;
+
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
@@ -15,10 +17,8 @@ import androidx.core.content.ContextCompat;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Calendar;
+import java.time.temporal.ChronoUnit;
 
-import de.jr.smtweaks.MainActivity;
 import de.jr.smtweaks.R;
 import de.jr.smtweaks.util.CryptoUtil;
 import de.jr.smtweaks.util.GsonRepository;
@@ -26,8 +26,6 @@ import de.jr.smtweaks.widgets.calendar.HolidayItem;
 import de.jr.smtweaks.widgets.calendar.TableItem;
 
 public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory {
-
-    private final int COLUMNS = 7;
 
     private final Context context;
     private final int widgetID;
@@ -41,6 +39,11 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
             {R.id.tl6, R.id.tr6, R.id.tb6, R.id.bg6, R.id.im6},
             {R.id.tl7, R.id.tr7, R.id.tb7, R.id.bg7, R.id.im7}
     };
+    private int columns;
+    private int mode;
+    private int from;
+    private int to;
+    private LocalDate firstDay;
     private HolidayItem[] holidayItems;
     private TableItem[] items = new TableItem[0];
 
@@ -88,33 +91,35 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
         RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.calendar_widget_items);
 
         rv.setTextViewText(R.id.cell0, String.valueOf(position + 1));
-        for (int i = 0; i < COLUMNS; i++) {
+        for (int i = 0; i < columns; i++) {
             rv.setInt(textIdArray[i][3], "setBackgroundColor", Color.TRANSPARENT);
             for (int j = 0; j < 3; j++) {
                 rv.setTextViewText(textIdArray[i][j], "");
             }
         }
 
+        for (int i = columns + 1; i < 7; i++) {
+            rv.setViewVisibility(textIdArray[i][3], GONE);
+            rv.setViewVisibility(textIdArray[i][4], GONE);
+        }
+
         if (holidayItems != null && widgetPrefs.getBoolean("show_holidays", true)) {
-            Calendar day = getMonday();
-            LocalDate localDate;
-            for (int i = 0; i < COLUMNS; i++) {
-                localDate = day.toInstant()
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDate();
+            LocalDate localDate = firstDay;
+            for (int i = 0; i < columns; i++) {
                 for (HolidayItem holidayItem : holidayItems) {
-                    if (holidayItem.containsDate(localDate) || (i == 1 && MainActivity.DEBUG)) {
+                    if (holidayItem.containsDate(localDate)) {
                         rv.setInt(textIdArray[i][3], "setBackgroundColor", ContextCompat.getColor(context, R.color.widget_alert_red));
                         break;
                     }
                 }
-                day.add(Calendar.DAY_OF_MONTH, 1);
+                localDate.plusDays(1);
             }
         }
 
         for (TableItem item : items) {
-            if (item.getRow() == position + 1) {
-                int[] text = textIdArray[item.getCol() - 1];
+            long daysBetween = ChronoUnit.DAYS.between(firstDay, item.getDate());
+            if (item.getRow() == position + 1 && item.getDate() != null && daysBetween >= 0L && daysBetween <= columns) {
+                int[] text = textIdArray[(int) daysBetween];
                 setText(rv, text[0], item.getLeftTop(), defaultColor);
 
                 if (item.getRightTopAlternate() != null && !item.getRightTopAlternate().equals(item.getRightTop())) {
@@ -157,15 +162,26 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
         rv.setTextViewText(textID, text);
     }
 
-    private Calendar getMonday() {
-        Calendar calendar = Calendar.getInstance();
-        int day = calendar.get(Calendar.DAY_OF_WEEK);
-        if (day != Calendar.SATURDAY && day != Calendar.SUNDAY) {
-            calendar.add(Calendar.DAY_OF_MONTH, Calendar.MONDAY - day);
-            return calendar;
+    private LocalDate getFirstDay() {
+        LocalDate date = LocalDate.now();
+        int currentDay = date.getDayOfWeek().getValue() - 1;
+
+        boolean inRange;
+
+        if (from <= to) {
+            inRange = (currentDay >= from && currentDay <= to);
+        } else {
+            inRange = (currentDay >= from || currentDay <= to);
         }
-        calendar.add(Calendar.DAY_OF_MONTH, (Calendar.MONDAY - day + 7) % 7);
-        return calendar;
+
+        if (inRange) {
+            return date.plusDays(-((currentDay - from + 7) % 7));
+        }
+
+        int diff = (from - currentDay + 7) % 7;
+        if (diff == 0) diff = 7;
+
+        return date.plusDays(diff);
     }
 
     @Override
@@ -180,9 +196,26 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
 
     @Override
     public void onDataSetChanged() {
+        mode = widgetPrefs.getInt("day_list_option", R.id.calendar_config_radio_adaptive);
+        from = widgetPrefs.getInt("from", 0);
+        to = widgetPrefs.getInt("to", 4);
+        if (mode == R.id.calendar_config_radio_adaptive)
+            firstDay = getFirstDay();
+        else
+            firstDay = LocalDate.now();
+
+        columns = from;
+        if (mode == R.id.calendar_config_radio_adaptive) {
+            if (from - to > 0)
+                columns = 7 - (from - to);
+            else
+                columns = Math.abs(from - to);
+        }
+
         try {
             String fileName;
-            if (widgetPrefs.getBoolean("show_last_week", true))
+            if (widgetPrefs.getBoolean("show_last_week", true)
+                    && mode == R.id.calendar_config_radio_adaptive)
                 fileName = CryptoUtil.FileNames.PLAIN_CALENDAR_TABLE_DATA_FILE_NAME;
             else
                 fileName = CryptoUtil.FileNames.PLAIN_CALENDAR_TABLE_DATA_FILE_NAME_SMALL;
@@ -198,15 +231,17 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
         }
 
         try {
-            byte[] bytes = CryptoUtil.readFile(
-                    new File(context.getFilesDir(), CryptoUtil.FileNames.HOLIDAY_DATES_FILE_NAME)
-            );
-            if (bytes == null)
-                bytes = new byte[0];
+            if (widgetPrefs.getBoolean("show_holidays", true)) {
+                byte[] bytes = CryptoUtil.readFile(
+                        new File(context.getFilesDir(), CryptoUtil.FileNames.HOLIDAY_DATES_FILE_NAME)
+                );
+                if (bytes == null)
+                    bytes = new byte[0];
 
-            holidayItems = new GsonRepository().jsonToHolidayItem(new String(bytes));
-            if (holidayItems == null)
-                holidayItems = new HolidayItem[0];
+                holidayItems = new GsonRepository().jsonToHolidayItem(new String(bytes));
+                if (holidayItems == null)
+                    holidayItems = new HolidayItem[0];
+            }
         } catch (IOException e) {
             Log.e("Holiday", "Holiday file not found", e);
         }

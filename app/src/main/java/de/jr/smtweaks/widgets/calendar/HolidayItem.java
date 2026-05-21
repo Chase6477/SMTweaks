@@ -11,14 +11,17 @@ public class HolidayItem {
         this.endDate = endDate;
     }
 
+    public static LocalDate getAsDate(String date) {
+        return LocalDate.parse(date);
+    }
+
     public LocalDate getEndDate() {
-        return LocalDate.parse(endDate);
+        return getAsDate(endDate);
     }
 
     public LocalDate getStartDate() {
-        return LocalDate.parse(startDate);
+        return getAsDate(startDate);
     }
-
 
     public boolean containsDate(LocalDate date) {
         return (!getStartDate().isAfter(date) && !getEndDate().isBefore(date));
